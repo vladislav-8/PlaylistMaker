@@ -1,18 +1,16 @@
 package com.practicum.playlistmaker_1
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-
-        val title = findViewById<TextView>(R.id.title2)
-
-        title.setOnClickListener {
-            finish()
-        }
+        val toolbar = findViewById<Toolbar>(R.id.settings_toolbar)
+        toolbar.setNavigationOnClickListener { onBackPressed() }
     }
+
 }
