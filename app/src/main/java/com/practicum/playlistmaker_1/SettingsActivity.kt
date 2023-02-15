@@ -1,9 +1,11 @@
 package com.practicum.playlistmaker_1
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 
@@ -13,42 +15,52 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        val toolbar = findViewById<Toolbar>(R.id.settings_toolbar)
-        toolbar.setNavigationOnClickListener { onBackPressed() }
+        findViewById<Toolbar>(R.id.settings_toolbar).setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
 
-        val shareTextView = findViewById<TextView>(R.id.shareTextView)
-        val callTextView = findViewById<TextView>(R.id.callTextView)
-        val agreementTextView = findViewById<TextView>(R.id.agreementTextView)
-
-        shareTextView.setOnClickListener {
-            val shareText = "https://practicum.yandex.ru/profile/android-developer/"
-            val sendIntent = Intent(Intent.ACTION_SEND)
-            sendIntent.putExtra(Intent.EXTRA_TEXT, shareText)
-            sendIntent.type = "text/plain"
-            val shareIntent = Intent.createChooser(sendIntent, null)
-            startActivity(shareIntent)
+        findViewById<TextView>(R.id.shareTextView).setOnClickListener {
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.support_share_link))
+            intent.type = "text/plain"
+            try {
+                startActivity(intent)
+            } catch (ex: ActivityNotFoundException) {
+                Toast.makeText(
+                    this@SettingsActivity,
+                    getString(R.string.not_found_app),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
 
-        callTextView.setOnClickListener {
-            val message = "Спасибо разработчикам и разработчицам за крутое приложение!"
-            val subject = "Сообщение разработчикам и разработчицам приложения Playlist Maker"
+        findViewById<TextView>(R.id.callTextView).setOnClickListener {
             val sendIntent = Intent(Intent.ACTION_SENDTO)
             sendIntent.data = Uri.parse("mailto:")
-            sendIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf("tchervladislav@yandex.ru"))
-            sendIntent.putExtra(Intent.EXTRA_SUBJECT, subject)
-            sendIntent.putExtra(Intent.EXTRA_TEXT, message)
-            val shareIntent = Intent.createChooser(sendIntent, null)
-            startActivity(shareIntent)
-
+            sendIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.support_mail)))
+            sendIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.subject))
+            sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.message))
+            try {
+                startActivity(sendIntent)
+            } catch (ex: ActivityNotFoundException) {
+                Toast.makeText(
+                    this@SettingsActivity,
+                    getString(R.string.not_found_app),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
 
-        agreementTextView.setOnClickListener {
-            val sendIntent =
-                Intent(Intent.ACTION_VIEW, Uri.parse("https://yandex.ru/legal/practicum_offer/"))
-            val shareIntent = Intent.createChooser(sendIntent, null)
-            startActivity(shareIntent)
+        findViewById<TextView>(R.id.agreementTextView).setOnClickListener {
+            val sendIntent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse(getString(R.string.agreement_link))
+            try {
+                startActivity(sendIntent)
+            } catch (ex: ActivityNotFoundException) {
+                Toast.makeText(
+                    this@SettingsActivity,
+                    getString(R.string.not_found_app),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
-
     }
-
 }
