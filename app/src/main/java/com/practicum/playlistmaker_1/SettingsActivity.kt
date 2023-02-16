@@ -4,9 +4,13 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
+import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
 import androidx.appcompat.widget.Toolbar
 
 
@@ -60,6 +64,14 @@ class SettingsActivity : AppCompatActivity() {
                     getString(R.string.not_found_app),
                     Toast.LENGTH_SHORT
                 ).show()
+            }
+        }
+
+        findViewById<Switch>(R.id.switch1).setOnCheckedChangeListener { _, isChecked ->
+            if(isChecked) {
+                AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES)
+            } else {
+                AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO)
             }
         }
     }
