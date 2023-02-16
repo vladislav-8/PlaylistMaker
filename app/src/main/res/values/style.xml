@@ -60,7 +60,6 @@
         <item name="iconGravity">textStart</item>
         <item name="iconPadding">8dp</item>
         <item name="iconTint">@color/black_button</item>
-        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="textColor">
