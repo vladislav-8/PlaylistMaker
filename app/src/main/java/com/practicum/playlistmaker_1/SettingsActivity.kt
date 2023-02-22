@@ -15,6 +15,7 @@ import androidx.appcompat.widget.Toolbar
 
 
 class SettingsActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
@@ -68,7 +69,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         findViewById<Switch>(R.id.switch1).setOnCheckedChangeListener { _, isChecked ->
-            if(isChecked) {
+            if (isChecked) {
                 AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES)
             } else {
                 AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO)

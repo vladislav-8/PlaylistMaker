@@ -8,14 +8,14 @@
     <dimen name="margin_horizontal">16dp</dimen>
     <dimen name="marginEnd">16dp</dimen>
     <dimen name="marginBottom">16dp</dimen>
-    <dimen name="marginBottom2">24dp</dimen>
+    <dimen name="marginBottom_24">24dp</dimen>
     <dimen name="paddingTop">16dp</dimen>
     <dimen name="paddingStart">64dp</dimen>
     <dimen name="paddingBottom">40dp</dimen>
     <dimen name="paddingBottom2">64dp</dimen>
     <dimen name="iconPadding">8dp</dimen>
     <dimen name="iconPadding2">28dp</dimen>
-    <dimen name="layout_height2">64dp</dimen>
+    <dimen name="layout_height_64">64dp</dimen>
 
 
 </resources>

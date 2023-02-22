@@ -32,10 +32,6 @@
 
     <style name="TextViewStyle_Settings">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">64dp</item>
-        <item name="android:layout_marginStart">16dp</item>
-        <item name="android:layout_marginEnd">16dp</item>
-        <item name="android:layout_marginBottom">24dp</item>
         <item name="android:fontFamily">@font/ys_display</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:textColor">@color/settings_color</item>
@@ -65,7 +61,6 @@
     <style name="textColor">
         <item name="android:textColor">@color/settings_color</item>
     </style>
-
 
 
 </resources>

@@ -19,6 +19,8 @@ class SearchActivity : AppCompatActivity() {
 
     private var searchInputQuery = ""
     private lateinit var inputEditText: EditText
+    private lateinit var clearImageView: ImageView
+    private lateinit var toolbar: Toolbar
 
     private val simpleTextWatcher = object : TextWatcher {
 
@@ -41,6 +43,8 @@ class SearchActivity : AppCompatActivity() {
         setContentView(R.layout.activity_search)
 
         inputEditText = findViewById(R.id.inputEditText)
+        clearImageView = findViewById(R.id.clearImageView)
+        toolbar = findViewById(R.id.settings_toolbar)
         inputEditText.requestFocus()
 
         findViewById<Toolbar>(R.id.settings_toolbar).setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
