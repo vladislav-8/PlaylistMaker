@@ -64,4 +64,12 @@
             tools:ignore="ContentDescription,ImageContrastCheck" />
 
     </FrameLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/searchRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="@dimen/padding_16"
+        android:paddingTop="@dimen/padding_24"
+        />
 </LinearLayout>

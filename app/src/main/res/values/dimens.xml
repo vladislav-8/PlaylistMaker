@@ -2,6 +2,7 @@
 <resources>
     <dimen name="textSize">24sp</dimen>
     <dimen name="textSize2">16sp</dimen>
+    <dimen name="textSize_12">12sp</dimen>
     <dimen name="cornerRadius">16dp</dimen>
     <dimen name="marginStart">16dp</dimen>
     <dimen name="marginStart2">64dp</dimen>
@@ -16,6 +17,11 @@
     <dimen name="iconPadding">8dp</dimen>
     <dimen name="iconPadding2">28dp</dimen>
     <dimen name="layout_height_64">64dp</dimen>
+    <dimen name="layout_width_48">48dp</dimen>
+    <dimen name="layout_height_48">48dp</dimen>
+    <dimen name="padding_8">8dp</dimen>
+    <dimen name="padding_16">16dp</dimen>
+    <dimen name="padding_24">24dp</dimen>
 
 
 </resources>

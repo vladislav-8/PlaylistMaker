@@ -2,10 +2,15 @@ package com.practicum.playlistmaker_1
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.practicum.playlistmaker_1.databinding.ActivityMediaLibraryBinding
 
 class MediaLibraryActivity : AppCompatActivity() {
+
+    private lateinit var mediaBinding: ActivityMediaLibraryBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_media_library)
+        mediaBinding = ActivityMediaLibraryBinding.inflate(layoutInflater)
+        setContentView(mediaBinding.root)
     }
 }

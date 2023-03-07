@@ -2,27 +2,29 @@ package com.practicum.playlistmaker_1
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
-import android.widget.Switch
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
-import androidx.appcompat.widget.Toolbar
+import com.practicum.playlistmaker_1.databinding.ActivitySettingsBinding
 
 
 class SettingsActivity : AppCompatActivity() {
 
+    private lateinit var settingBinding: ActivitySettingsBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
+        settingBinding = ActivitySettingsBinding.inflate(layoutInflater)
+        setContentView(settingBinding.root)
 
-        findViewById<Toolbar>(R.id.settings_toolbar).setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
+        settingBinding.settingsToolbar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
 
-        findViewById<TextView>(R.id.shareTextView).setOnClickListener {
+        settingBinding.shareTextView.setOnClickListener {
             val intent = Intent(Intent.ACTION_SEND)
             intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.support_share_link))
             intent.type = "text/plain"
@@ -37,7 +39,7 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
-        findViewById<TextView>(R.id.callTextView).setOnClickListener {
+        settingBinding.callTextView.setOnClickListener {
             val sendIntent = Intent(Intent.ACTION_SENDTO)
             sendIntent.data = Uri.parse("mailto:")
             sendIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.support_mail)))
@@ -54,7 +56,7 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
-        findViewById<TextView>(R.id.agreementTextView).setOnClickListener {
+        settingBinding.agreementTextView.setOnClickListener {
             val sendIntent = Intent(Intent.ACTION_VIEW)
             intent.data = Uri.parse(getString(R.string.agreement_link))
             try {
@@ -68,12 +70,17 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
-        findViewById<Switch>(R.id.switch1).setOnCheckedChangeListener { _, isChecked ->
+        settingBinding.switch1.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES)
             } else {
                 AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO)
             }
+        }
+
+        when (resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)) {
+            Configuration.UI_MODE_NIGHT_YES -> settingBinding.switch1.isChecked = true
+            Configuration.UI_MODE_NIGHT_NO -> settingBinding.switch1.isChecked = false
         }
     }
 }
