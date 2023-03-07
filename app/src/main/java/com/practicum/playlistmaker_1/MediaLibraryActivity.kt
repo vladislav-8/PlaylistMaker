@@ -6,7 +6,7 @@ import com.practicum.playlistmaker_1.databinding.ActivityMediaLibraryBinding
 
 class MediaLibraryActivity : AppCompatActivity() {
 
-    lateinit var mediaBinding: ActivityMediaLibraryBinding
+    private lateinit var mediaBinding: ActivityMediaLibraryBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

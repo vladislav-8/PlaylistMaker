@@ -15,7 +15,7 @@ import com.practicum.playlistmaker_1.databinding.ActivitySettingsBinding
 
 class SettingsActivity : AppCompatActivity() {
 
-    lateinit var settingBinding: ActivitySettingsBinding
+    private lateinit var settingBinding: ActivitySettingsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
