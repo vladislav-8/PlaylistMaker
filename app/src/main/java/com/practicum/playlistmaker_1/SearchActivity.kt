@@ -7,11 +7,7 @@ import android.text.TextWatcher
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.ImageView
-import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker_1.databinding.ActivitySearchBinding
 
 class SearchActivity : AppCompatActivity() {
@@ -55,13 +51,8 @@ class SearchActivity : AppCompatActivity() {
 
     lateinit var searchBinding: ActivitySearchBinding
     private var searchInputQuery = ""
-    private lateinit var inputEditText: EditText
-    private lateinit var clearImageView: ImageView
-    private lateinit var toolbar: Toolbar
-    private lateinit var searchRecycler: RecyclerView
 
     private val simpleTextWatcher = object : TextWatcher {
-
         override fun onTextChanged(s: CharSequence?, s1: Int, s2: Int, s3: Int) {
             if (s.isNullOrEmpty()) {
                 searchBinding.clearImageView.visibility = GONE
@@ -81,23 +72,19 @@ class SearchActivity : AppCompatActivity() {
         searchBinding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(searchBinding.root)
 
-        inputEditText = searchBinding.inputEditText
-        clearImageView = searchBinding.clearImageView
-        toolbar = searchBinding.settingsToolbar
-        searchRecycler = searchBinding.searchRecycler
-        inputEditText.requestFocus()
+        searchBinding.inputEditText.requestFocus()
 
         searchBinding.settingsToolbar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
         searchBinding.clearImageView.setOnClickListener { clearSearchForm() }
         searchBinding.inputEditText.addTextChangedListener(simpleTextWatcher)
 
-        searchRecycler.layoutManager = LinearLayoutManager(
+        searchBinding.searchRecycler.layoutManager = LinearLayoutManager(
             this,
             LinearLayoutManager.VERTICAL,
             false
         )
         val trackAdapter = TrackAdapter(trackList)
-        searchRecycler.adapter = trackAdapter
+        searchBinding.searchRecycler.adapter = trackAdapter
     }
 
 
@@ -118,10 +105,7 @@ class SearchActivity : AppCompatActivity() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         searchInputQuery = savedInstanceState.getString(SEARCH_QUERY, "")
-        inputEditText.setText(searchInputQuery)
-
+        searchBinding.inputEditText.setText(searchInputQuery)
     }
-
-
 }
 
