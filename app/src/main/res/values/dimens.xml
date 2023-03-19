@@ -7,8 +7,10 @@
     <dimen name="marginStart">16dp</dimen>
     <dimen name="marginStart2">64dp</dimen>
     <dimen name="margin_horizontal">16dp</dimen>
+    <dimen name="margin_horizontal_24">24dp</dimen>
     <dimen name="marginEnd">16dp</dimen>
     <dimen name="marginBottom">16dp</dimen>
+    <dimen name="marginTop_8">8dp</dimen>
     <dimen name="marginBottom_24">24dp</dimen>
     <dimen name="paddingTop">16dp</dimen>
     <dimen name="paddingStart">64dp</dimen>
