@@ -26,9 +26,7 @@ class SearchActivity : AppCompatActivity() {
         .build()
 
     private val tracksApi = retrofit.create(TracksApi::class.java)
-    private val tracks = ArrayList<Track>()
-    private val adapter = TrackAdapter(tracks)
-
+    private val adapter = TrackAdapter()
 
     companion object {
         const val SEARCH_QUERY = "SEARCH_QUERY"
@@ -76,17 +74,14 @@ class SearchActivity : AppCompatActivity() {
             }
             false
         }
-
         refresh()
     }
-
 
     private fun refresh() {
         searchBinding.refreshButton.setOnClickListener {
             searchTrack()
         }
     }
-
 
     private fun searchTrack() {
         tracksApi.searchTrack(searchBinding.inputEditText.text.toString())
@@ -96,9 +91,7 @@ class SearchActivity : AppCompatActivity() {
                     response: Response<TrackResponse>
                 ) {
                     if (searchBinding.inputEditText.text.isNotEmpty() && !response.body()?.results.isNullOrEmpty() && response.code() == 200) {
-                        tracks.clear()
-                        tracks.addAll(response.body()?.results!!)
-                        adapter.notifyDataSetChanged()
+                        adapter.setTracks(response.body()?.results)
                         showPlaceholder(Placeholder.SEARCH_RESULT)
                     } else {
                         showPlaceholder(Placeholder.NOTHING_FOUND)
@@ -110,7 +103,6 @@ class SearchActivity : AppCompatActivity() {
                 }
             })
     }
-
 
     fun showPlaceholder(placeholder: Placeholder) {
         when (placeholder) {
@@ -134,14 +126,21 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-
     private fun clearSearchForm() {
         searchBinding.inputEditText.setText("")
+        adapter.clearTracks()
+        adapter.notifyDataSetChanged()
+        clearPlaceholders()
         val view = this.currentFocus
         if (view != null) {
             val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
+    }
+
+    private fun clearPlaceholders() {
+        searchBinding.nothingFound.visibility = GONE
+        searchBinding.internetProblem.visibility = GONE
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
