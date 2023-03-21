@@ -91,7 +91,7 @@ class SearchActivity : AppCompatActivity() {
                     response: Response<TrackResponse>
                 ) {
                     if (searchBinding.inputEditText.text.isNotEmpty() && !response.body()?.results.isNullOrEmpty() && response.code() == 200) {
-                        adapter.setTracks(response.body()?.results)
+                        adapter.tracks = response.body()?.results as MutableList<Track>
                         showPlaceholder(Placeholder.SEARCH_RESULT)
                     } else {
                         showPlaceholder(Placeholder.NOTHING_FOUND)
@@ -128,7 +128,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun clearSearchForm() {
         searchBinding.inputEditText.setText("")
-        adapter.setTracks(null)
+        adapter.tracks.clear()
         clearPlaceholders()
         val view = this.currentFocus
         if (view != null) {
@@ -150,7 +150,10 @@ class SearchActivity : AppCompatActivity() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         searchInputQuery = savedInstanceState.getString(SEARCH_QUERY, "")
-        searchBinding.inputEditText.setText(searchInputQuery)
+        if (searchInputQuery.isNotEmpty()) {
+            searchBinding.inputEditText.setText(searchInputQuery)
+            searchTrack()
+        }
     }
 }
 
