@@ -8,10 +8,6 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
 
     private var tracks = mutableListOf<Track>()
 
-    fun clearTracks() {
-        tracks.clear()
-    }
-
     fun setTracks(newTracks: List<Track>?) {
         tracks.clear()
         if (!newTracks.isNullOrEmpty()) {
