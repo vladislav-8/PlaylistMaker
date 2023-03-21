@@ -129,6 +129,7 @@ class SearchActivity : AppCompatActivity() {
     private fun clearSearchForm() {
         searchBinding.inputEditText.setText("")
         adapter.tracks.clear()
+        showPlaceholder(Placeholder.SEARCH_RESULT)
         clearPlaceholders()
         val view = this.currentFocus
         if (view != null) {
