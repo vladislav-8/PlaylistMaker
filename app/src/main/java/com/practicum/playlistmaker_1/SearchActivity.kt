@@ -8,7 +8,6 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlistmaker_1.databinding.ActivitySearchBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -18,7 +17,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
 
+    lateinit var searchBinding: ActivitySearchBinding
     private val tracksBaseUrl = "https://itunes.apple.com"
+    private var searchInputQuery = ""
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(tracksBaseUrl)
@@ -26,28 +27,40 @@ class SearchActivity : AppCompatActivity() {
         .build()
 
     private val tracksApi = retrofit.create(TracksApi::class.java)
-    private val adapter = TrackAdapter()
 
-    companion object {
-        const val SEARCH_QUERY = "SEARCH_QUERY"
+    private val trackAdapter = TrackAdapter {
+        searchHistory.addTrack(it)
+    }
+    private val historyAdapter = TrackAdapter {
+        searchHistory.addTrack(it)
     }
 
-    lateinit var searchBinding: ActivitySearchBinding
-    private var searchInputQuery = ""
+    companion object {
+        const val SEARCH_QUERY = "search_query"
+        const val TRACKS_HISTORY_KEY = "tracks_history_key"
+        const val TRACKS_HISTORY_SIZE = 10
+    }
 
     private val simpleTextWatcher = object : TextWatcher {
         override fun onTextChanged(s: CharSequence?, s1: Int, s2: Int, s3: Int) {
+            searchInputQuery = s.toString()
             if (s.isNullOrEmpty()) {
                 searchBinding.clearImageView.visibility = GONE
-            } else {
-                searchBinding.clearImageView.visibility = VISIBLE
+            } else searchBinding.clearImageView.visibility = VISIBLE
+
+            if (searchBinding.inputEditText.hasFocus() && searchInputQuery.isNotEmpty()) {
+                showPlaceholder(Placeholder.SEARCH_RESULT)
+                searchBinding.searchHistoryRecycler.visibility = GONE
             }
-            searchInputQuery = s.toString()
         }
 
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
         override fun afterTextChanged(s: Editable?) {}
+    }
 
+    private val searchHistory by lazy {
+        val sharedPrefs = getSharedPreferences(App.PLAYLIST_MAKER_SHARED_PREFS, MODE_PRIVATE)
+        SearchHistory(sharedPrefs)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,12 +74,14 @@ class SearchActivity : AppCompatActivity() {
         searchBinding.clearImageView.setOnClickListener { clearSearchForm() }
         searchBinding.inputEditText.addTextChangedListener(simpleTextWatcher)
 
-        searchBinding.searchRecycler.layoutManager = LinearLayoutManager(
-            this,
-            LinearLayoutManager.VERTICAL,
-            false
-        )
-        searchBinding.searchRecycler.adapter = adapter
+        searchBinding.searchRecycler.adapter = trackAdapter
+        searchBinding.searchHistoryRecycler.adapter = historyAdapter
+
+        searchBinding.inputEditText.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus && searchBinding.inputEditText.text.isEmpty()) {
+                showPlaceholder(Placeholder.SEARCH_RESULT)
+            }
+        }
 
         searchBinding.inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -75,6 +90,18 @@ class SearchActivity : AppCompatActivity() {
             false
         }
         refresh()
+
+        if (searchBinding.inputEditText.text.isEmpty()) {
+            historyAdapter.tracks = searchHistory.getTracks()
+            if (historyAdapter.tracks.isNotEmpty()) {
+                showPlaceholder(Placeholder.TRACKS_HISTORY)
+            }
+        }
+
+        searchBinding.clearHistoryButton.setOnClickListener {
+            searchHistory.clear()
+            showPlaceholder(Placeholder.SEARCH_RESULT)
+        }
     }
 
     private fun refresh() {
@@ -90,11 +117,18 @@ class SearchActivity : AppCompatActivity() {
                     call: Call<TrackResponse>,
                     response: Response<TrackResponse>
                 ) {
-                    if (searchBinding.inputEditText.text.isNotEmpty() && !response.body()?.results.isNullOrEmpty() && response.code() == 200) {
-                        adapter.tracks = response.body()?.results as MutableList<Track>
-                        showPlaceholder(Placeholder.SEARCH_RESULT)
-                    } else {
-                        showPlaceholder(Placeholder.NOTHING_FOUND)
+                    when (response.code()) {
+                        200 -> {
+                            if (response.body()?.results?.isNotEmpty() == true) {
+                                trackAdapter.tracks = response.body()?.results!! as MutableList<Track>
+                                showPlaceholder(Placeholder.SEARCH_RESULT)
+                            } else {
+                                showPlaceholder(Placeholder.NOTHING_FOUND)
+                            }
+                        }
+                        else -> {
+                            showPlaceholder(Placeholder.INTERNET_PROBLEM)
+                        }
                     }
                 }
 
@@ -109,27 +143,40 @@ class SearchActivity : AppCompatActivity() {
             Placeholder.NOTHING_FOUND -> {
                 searchBinding.searchRecycler.visibility = GONE
                 searchBinding.internetProblem.visibility = GONE
+                searchBinding.searchHistoryLayout.visibility = GONE
                 searchBinding.nothingFound.visibility = VISIBLE
 
             }
             Placeholder.INTERNET_PROBLEM -> {
                 searchBinding.searchRecycler.visibility = GONE
                 searchBinding.nothingFound.visibility = GONE
+                searchBinding.searchHistoryLayout.visibility = GONE
                 searchBinding.internetProblem.visibility = VISIBLE
             }
 
-            else -> {
-                searchBinding.searchRecycler.visibility = VISIBLE
+            Placeholder.SEARCH_RESULT -> {
                 searchBinding.nothingFound.visibility = GONE
                 searchBinding.internetProblem.visibility = GONE
+                searchBinding.searchHistoryLayout.visibility = GONE
+                searchBinding.searchRecycler.visibility = VISIBLE
+            }
+            else -> {
+                searchBinding.searchRecycler.visibility = GONE
+                searchBinding.nothingFound.visibility = GONE
+                searchBinding.internetProblem.visibility = GONE
+                searchBinding.searchHistoryLayout.visibility = VISIBLE
             }
         }
     }
 
     private fun clearSearchForm() {
         searchBinding.inputEditText.setText("")
-        adapter.tracks.clear()
-        showPlaceholder(Placeholder.SEARCH_RESULT)
+        trackAdapter.tracks.clear()
+        if (historyAdapter.tracks.isNotEmpty()) {
+            showPlaceholder(Placeholder.TRACKS_HISTORY)
+        } else {
+            showPlaceholder(Placeholder.SEARCH_RESULT)
+        }
         clearPlaceholders()
         val view = this.currentFocus
         if (view != null) {
@@ -157,5 +204,3 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 }
-
-
