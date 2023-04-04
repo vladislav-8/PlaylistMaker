@@ -3,8 +3,8 @@ package com.practicum.playlistmaker_1
 import androidx.recyclerview.widget.DiffUtil
 
 class TracksDiffCallback(
-    private val oldList: MutableList<Track>,
-    private val newList: MutableList<Track>
+    private val oldList: List<Track>,
+    private val newList: List<Track>
 ) : DiffUtil.Callback() {
 
     override fun getOldListSize() = oldList.size

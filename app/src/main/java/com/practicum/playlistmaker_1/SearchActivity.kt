@@ -50,7 +50,6 @@ class SearchActivity : AppCompatActivity() {
 
             if (searchBinding.inputEditText.hasFocus() && searchInputQuery.isNotEmpty()) {
                 showPlaceholder(Placeholder.SEARCH_RESULT)
-                searchBinding.searchHistoryRecycler.visibility = GONE
             }
         }
 
@@ -171,7 +170,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun clearSearchForm() {
         searchBinding.inputEditText.setText("")
-        trackAdapter.tracks.clear()
+        historyAdapter.tracks = searchHistory.getTracks()
         if (historyAdapter.tracks.isNotEmpty()) {
             showPlaceholder(Placeholder.TRACKS_HISTORY)
         } else {
