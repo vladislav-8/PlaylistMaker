@@ -5,10 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 
-class TrackAdapter (private val clickListener: TrackClickListener) : RecyclerView.Adapter<TrackViewHolder>() {
+class TrackAdapter(private val clickListener: TrackClickListener) :
+    RecyclerView.Adapter<TrackViewHolder>() {
 
     var tracks = mutableListOf<Track>()
-
         set(newTracks) {
             val diffCallback = TracksDiffCallback(field, newTracks)
             val diffResult = DiffUtil.calculateDiff(diffCallback)
