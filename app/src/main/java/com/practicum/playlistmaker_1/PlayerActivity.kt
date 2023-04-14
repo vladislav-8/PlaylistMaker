@@ -36,7 +36,7 @@ class PlayerActivity : AppCompatActivity() {
             .load(track.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
             .placeholder(R.drawable.placeholder)
             .centerCrop()
-            .transform(RoundedCorners(resources.getDimensionPixelSize(R.dimen.corner_radius)))
+            .transform(RoundedCorners(resources.getDimensionPixelSize(R.dimen.corner_radius_8)))
             .into(playerBinding.mediaTrackImage)
 
         playerBinding.trackName.text = track.trackName
