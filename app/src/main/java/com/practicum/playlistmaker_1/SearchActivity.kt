@@ -3,12 +3,13 @@ package com.practicum.playlistmaker_1
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.MediaStore.Audio.AudioColumns.TRACK
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View.GONE
 import android.view.View.VISIBLE
-import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import com.google.gson.Gson
@@ -22,8 +23,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 class SearchActivity : AppCompatActivity() {
 
     lateinit var searchBinding: ActivitySearchBinding
-    private val tracksBaseUrl = "https://itunes.apple.com"
+    private val tracksBaseUrl = "http://itunes.apple.com"
     private var searchInputQuery = ""
+    private var isClickAllowed = true
+    private val handler = Handler(Looper.getMainLooper())
+    private val searchRunnable = Runnable { searchTrack() }
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(tracksBaseUrl)
@@ -33,11 +37,15 @@ class SearchActivity : AppCompatActivity() {
     private val tracksApi = retrofit.create(TracksApi::class.java)
 
     private val trackAdapter = TrackAdapter {
-        showPlayer(it)
+        if (clickDebounce()) {
+            showPlayer(it)
+        }
     }
 
     private val historyAdapter = TrackAdapter {
-        showPlayer(it)
+        if (clickDebounce()) {
+            showPlayer(it)
+        }
     }
 
     private fun showPlayer(track: Track) {
@@ -48,10 +56,26 @@ class SearchActivity : AppCompatActivity() {
         startActivity(displayIntent)
     }
 
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+    }
+
+    private fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
+    }
+
     companion object {
         const val SEARCH_QUERY = "search_query"
         const val TRACKS_HISTORY_KEY = "tracks_history_key"
         const val TRACKS_HISTORY_SIZE = 10
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 
     private val simpleTextWatcher = object : TextWatcher {
@@ -60,6 +84,7 @@ class SearchActivity : AppCompatActivity() {
             searchBinding.clearImageView.isVisible = !s.isNullOrEmpty()
 
             if (searchBinding.inputEditText.hasFocus() && searchInputQuery.isNotEmpty()) {
+                searchDebounce()
                 showState(State.SEARCH_RESULT)
             }
         }
@@ -93,12 +118,6 @@ class SearchActivity : AppCompatActivity() {
             }
         }
 
-        searchBinding.inputEditText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                searchTrack()
-            }
-            false
-        }
         refresh()
 
         if (searchBinding.inputEditText.text.isEmpty()) {
@@ -121,6 +140,8 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun searchTrack() {
+        searchBinding.progressBar.visibility = VISIBLE
+        searchBinding.searchRecycler.visibility = GONE
         tracksApi.searchTrack(searchBinding.inputEditText.text.toString())
             .enqueue(object : Callback<TrackResponse> {
                 override fun onResponse(
@@ -130,12 +151,14 @@ class SearchActivity : AppCompatActivity() {
                     when (response.code()) {
                         200 -> {
                             if (response.body()?.results?.isNotEmpty() == true) {
-                                trackAdapter.tracks = response.body()?.results!! as MutableList<Track>
+                                trackAdapter.tracks =
+                                    response.body()?.results!! as MutableList<Track>
                                 showState(State.SEARCH_RESULT)
                             } else {
                                 showState(State.NOTHING_FOUND)
                             }
                         }
+
                         else -> {
                             showState(State.INTERNET_PROBLEM)
                         }
@@ -155,13 +178,15 @@ class SearchActivity : AppCompatActivity() {
                 searchBinding.internetProblem.visibility = GONE
                 searchBinding.searchHistoryLayout.visibility = GONE
                 searchBinding.nothingFound.visibility = VISIBLE
-
+                searchBinding.progressBar.visibility = GONE
             }
+
             State.INTERNET_PROBLEM -> {
                 searchBinding.searchRecycler.visibility = GONE
                 searchBinding.nothingFound.visibility = GONE
                 searchBinding.searchHistoryLayout.visibility = GONE
                 searchBinding.internetProblem.visibility = VISIBLE
+                searchBinding.progressBar.visibility = GONE
             }
 
             State.SEARCH_RESULT -> {
@@ -169,7 +194,9 @@ class SearchActivity : AppCompatActivity() {
                 searchBinding.internetProblem.visibility = GONE
                 searchBinding.searchHistoryLayout.visibility = GONE
                 searchBinding.searchRecycler.visibility = VISIBLE
+                searchBinding.progressBar.visibility = GONE
             }
+
             else -> {
                 searchBinding.searchRecycler.visibility = GONE
                 searchBinding.nothingFound.visibility = GONE
