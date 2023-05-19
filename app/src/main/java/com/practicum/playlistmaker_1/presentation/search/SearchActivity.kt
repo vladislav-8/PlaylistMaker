@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker_1
+package com.practicum.playlistmaker_1.presentation.search
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -13,7 +13,13 @@ import android.view.View.VISIBLE
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import com.google.gson.Gson
+import com.practicum.playlistmaker_1.App
+import com.practicum.playlistmaker_1.domain.enums.State
+import com.practicum.playlistmaker_1.presentation.player.PlayerActivity
+import com.practicum.playlistmaker_1.data.TrackResponse
+import com.practicum.playlistmaker_1.data.TracksApi
 import com.practicum.playlistmaker_1.databinding.ActivitySearchBinding
+import com.practicum.playlistmaker_1.domain.models.Track
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

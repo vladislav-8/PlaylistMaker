@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker_1
+package com.practicum.playlistmaker_1.presentation.settings
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
+import com.practicum.playlistmaker_1.App
+import com.practicum.playlistmaker_1.R
 import com.practicum.playlistmaker_1.databinding.ActivitySettingsBinding
 
 

@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker_1
+package com.practicum.playlistmaker_1.domain.enums
 
 enum class State {
     SEARCH_RESULT,

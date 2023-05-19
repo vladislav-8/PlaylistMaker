@@ -1,8 +1,11 @@
-package com.practicum.playlistmaker_1
+package com.practicum.playlistmaker_1.presentation.main
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.practicum.playlistmaker_1.presentation.search.SearchActivity
+import com.practicum.playlistmaker_1.presentation.settings.SettingsActivity
+import com.practicum.playlistmaker_1.presentation.medialibrary.MediaLibraryActivity
 import com.practicum.playlistmaker_1.databinding.ActivityMainBinding
 
 
