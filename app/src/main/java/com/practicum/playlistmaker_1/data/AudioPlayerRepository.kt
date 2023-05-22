@@ -1,18 +1,18 @@
-package com.practicum.playlistmaker_1.domain.impl
+package com.practicum.playlistmaker_1.data
 
 
 import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
-import com.practicum.playlistmaker_1.presentation.player.PlayerActivity
+import com.practicum.playlistmaker_1.presentation.ui.PlayerActivity
 import com.practicum.playlistmaker_1.R
-import com.practicum.playlistmaker_1.domain.api.AudioPlayerInteractor
-import com.practicum.playlistmaker_1.domain.enums.PlayerState
+import com.practicum.playlistmaker_1.domain.AudioPlayerInteractor
+import com.practicum.playlistmaker_1.domain.PlayerState
 import com.practicum.playlistmaker_1.databinding.ActivityPlayerBinding
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class AudioPlayerInteractorImpl : AudioPlayerInteractor {
+class AudioPlayerRepository : AudioPlayerInteractor {
 
     lateinit var playerBinding: ActivityPlayerBinding
     var mediaPlayer = MediaPlayer()

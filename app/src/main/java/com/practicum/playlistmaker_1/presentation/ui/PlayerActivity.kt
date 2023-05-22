@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker_1.presentation.player
+package com.practicum.playlistmaker_1.presentation.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,7 +8,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.gson.Gson
 import com.practicum.playlistmaker_1.R
-import com.practicum.playlistmaker_1.domain.impl.AudioPlayerInteractorImpl
+import com.practicum.playlistmaker_1.data.AudioPlayerRepository
 import com.practicum.playlistmaker_1.databinding.ActivityPlayerBinding
 import com.practicum.playlistmaker_1.domain.models.Track
 import java.text.SimpleDateFormat
@@ -16,14 +16,14 @@ import java.util.*
 
 class PlayerActivity : AppCompatActivity() {
 
-    private val audioPlayerInteractor = AudioPlayerInteractorImpl()
+    private val audioPlayerRepository = AudioPlayerRepository()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        audioPlayerInteractor.playerBinding = ActivityPlayerBinding.inflate(layoutInflater)
-        setContentView(audioPlayerInteractor.playerBinding.root)
+        audioPlayerRepository.playerBinding = ActivityPlayerBinding.inflate(layoutInflater)
+        setContentView(audioPlayerRepository.playerBinding.root)
 
-        audioPlayerInteractor.playerBinding.toolbarInclude.toolbar.apply {
+        audioPlayerRepository.playerBinding.toolbarInclude.toolbar.apply {
             title = ""
             setSupportActionBar(this)
             setNavigationOnClickListener {
@@ -34,50 +34,50 @@ class PlayerActivity : AppCompatActivity() {
         val track = Gson().fromJson(intent.getStringExtra(TRACK), Track::class.java)
 
         Glide
-            .with(audioPlayerInteractor.playerBinding.mediaTrackImage)
+            .with(audioPlayerRepository.playerBinding.mediaTrackImage)
             .load(track.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
             .placeholder(R.drawable.placeholder)
             .centerCrop()
             .transform(RoundedCorners(resources.getDimensionPixelSize(R.dimen.corner_radius_8)))
-            .into(audioPlayerInteractor.playerBinding.mediaTrackImage)
+            .into(audioPlayerRepository.playerBinding.mediaTrackImage)
 
-        audioPlayerInteractor.playerBinding.trackName.text = track.trackName
-        audioPlayerInteractor.playerBinding.artistName.text = track.artistName
-        audioPlayerInteractor.playerBinding.primaryGenreName.text = track.primaryGenreName
-        audioPlayerInteractor.playerBinding.country.text = track.country
+        audioPlayerRepository.playerBinding.trackName.text = track.trackName
+        audioPlayerRepository.playerBinding.artistName.text = track.artistName
+        audioPlayerRepository.playerBinding.primaryGenreName.text = track.primaryGenreName
+        audioPlayerRepository.playerBinding.country.text = track.country
 
-        audioPlayerInteractor.playerBinding.trackTime.text =
+        audioPlayerRepository.playerBinding.trackTime.text =
             SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
 
         val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(track.releaseDate)
         if (date != null) {
             val formattedDatesString = SimpleDateFormat("yyyy", Locale.getDefault()).format(date)
-            audioPlayerInteractor.playerBinding.releaseDate.text = formattedDatesString
+            audioPlayerRepository.playerBinding.releaseDate.text = formattedDatesString
         }
 
         if (track.collectionName.isNotEmpty()) {
-            audioPlayerInteractor.playerBinding.collectionName.text = track.collectionName
+            audioPlayerRepository.playerBinding.collectionName.text = track.collectionName
         } else {
-            audioPlayerInteractor.playerBinding.collectionName.visibility = View.GONE
-            audioPlayerInteractor.playerBinding.trackAlbum.visibility = View.GONE
+            audioPlayerRepository.playerBinding.collectionName.visibility = View.GONE
+            audioPlayerRepository.playerBinding.trackAlbum.visibility = View.GONE
         }
 
-        track?.previewUrl?.let { audioPlayerInteractor.preparePlayer(it) }
+        track?.previewUrl?.let { audioPlayerRepository.preparePlayer(it) }
 
-        audioPlayerInteractor.playerBinding.playButton.setOnClickListener {
-            audioPlayerInteractor.playbackControl()
+        audioPlayerRepository.playerBinding.playButton.setOnClickListener {
+            audioPlayerRepository.playbackControl()
         }
     }
 
     override fun onPause() {
         super.onPause()
-        audioPlayerInteractor.pausePlayer()
+        audioPlayerRepository.pausePlayer()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        audioPlayerInteractor.mediaPlayer.release()
-        audioPlayerInteractor.handler.removeCallbacks(audioPlayerInteractor.updateTimer())
+        audioPlayerRepository.mediaPlayer.release()
+        audioPlayerRepository.handler.removeCallbacks(audioPlayerRepository.updateTimer())
     }
 
     companion object {
