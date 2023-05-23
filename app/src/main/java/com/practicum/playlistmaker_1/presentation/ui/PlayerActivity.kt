@@ -10,7 +10,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.gson.Gson
 import com.practicum.playlistmaker_1.R
-import com.practicum.playlistmaker_1.data.PlayerInteractorRepositoryImpl
+import com.practicum.playlistmaker_1.data.repository.PlayerInteractorRepositoryImpl
 import com.practicum.playlistmaker_1.databinding.ActivityPlayerBinding
 import com.practicum.playlistmaker_1.domain.models.Track
 import com.practicum.playlistmaker_1.domain.use_case.PlayerInteractor
