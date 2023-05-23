@@ -14,7 +14,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import com.google.gson.Gson
 import com.practicum.playlistmaker_1.App
-import com.practicum.playlistmaker_1.domain.State
+import com.practicum.playlistmaker_1.presentation.ui.State
 import com.practicum.playlistmaker_1.presentation.ui.PlayerActivity
 import com.practicum.playlistmaker_1.data.TrackResponse
 import com.practicum.playlistmaker_1.data.TracksApi

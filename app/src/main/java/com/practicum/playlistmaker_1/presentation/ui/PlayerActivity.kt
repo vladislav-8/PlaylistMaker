@@ -12,6 +12,7 @@ import com.google.gson.Gson
 import com.practicum.playlistmaker_1.R
 import com.practicum.playlistmaker_1.data.repository.PlayerInteractorRepositoryImpl
 import com.practicum.playlistmaker_1.databinding.ActivityPlayerBinding
+import com.practicum.playlistmaker_1.domain.models.PlayerState
 import com.practicum.playlistmaker_1.domain.models.Track
 import com.practicum.playlistmaker_1.domain.use_case.PlayerInteractor
 import java.text.SimpleDateFormat

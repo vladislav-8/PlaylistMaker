@@ -1,6 +1,6 @@
 package com.practicum.playlistmaker_1.domain.repository
 
-import com.practicum.playlistmaker_1.presentation.ui.PlayerState
+import com.practicum.playlistmaker_1.domain.models.PlayerState
 
 interface PlayerInteractorRepository {
     fun preparePlayer(url: String)

@@ -3,7 +3,7 @@ package com.practicum.playlistmaker_1.data.repository
 
 import android.media.MediaPlayer
 import com.practicum.playlistmaker_1.domain.repository.PlayerInteractorRepository
-import com.practicum.playlistmaker_1.presentation.ui.PlayerState
+import com.practicum.playlistmaker_1.domain.models.PlayerState
 
 class PlayerInteractorRepositoryImpl : PlayerInteractorRepository {
 
