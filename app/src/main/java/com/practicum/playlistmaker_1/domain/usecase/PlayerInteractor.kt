@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker_1.domain.use_case
+package com.practicum.playlistmaker_1.domain.usecase
 
 import com.practicum.playlistmaker_1.domain.repository.PlayerInteractorRepository
 

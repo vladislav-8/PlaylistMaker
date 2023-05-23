@@ -14,7 +14,7 @@ import com.practicum.playlistmaker_1.data.repository.PlayerInteractorRepositoryI
 import com.practicum.playlistmaker_1.databinding.ActivityPlayerBinding
 import com.practicum.playlistmaker_1.domain.models.PlayerState
 import com.practicum.playlistmaker_1.domain.models.Track
-import com.practicum.playlistmaker_1.domain.use_case.PlayerInteractor
+import com.practicum.playlistmaker_1.domain.usecase.PlayerInteractor
 import java.text.SimpleDateFormat
 import java.util.*
 
