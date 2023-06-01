@@ -1,9 +1,11 @@
-package com.practicum.playlistmaker_1
+package com.practicum.playlistmaker_1.presentation.search
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.practicum.playlistmaker_1.R
+import com.practicum.playlistmaker_1.domain.models.Track
 
 class TrackAdapter(private val clickListener: TrackClickListener) :
     RecyclerView.Adapter<TrackViewHolder>() {

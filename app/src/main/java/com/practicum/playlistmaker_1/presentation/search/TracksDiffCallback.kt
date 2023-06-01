@@ -1,6 +1,7 @@
-package com.practicum.playlistmaker_1
+package com.practicum.playlistmaker_1.presentation.search
 
 import androidx.recyclerview.widget.DiffUtil
+import com.practicum.playlistmaker_1.domain.models.Track
 
 class TracksDiffCallback(
     private val oldList: List<Track>,
