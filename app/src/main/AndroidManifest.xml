@@ -21,14 +21,14 @@
             android:name=".player.ui.activity.PlayerActivity"
             android:exported="false" />
         <activity
-            android:name=".search.SearchActivity"
+            android:name=".search.ui.activity.SearchActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".media_library.ui.MediaLibraryActivity"
+            android:name=".media_library.MediaLibraryActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

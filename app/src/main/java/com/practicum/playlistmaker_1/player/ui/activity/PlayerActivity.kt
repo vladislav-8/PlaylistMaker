@@ -2,41 +2,46 @@ package com.practicum.playlistmaker_1.player.ui.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.MediaStore.Audio.AudioColumns.TRACK
 import android.view.View
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.gson.Gson
 import com.practicum.playlistmaker_1.R
-import com.practicum.playlistmaker_1.creator.Creator
 import com.practicum.playlistmaker_1.databinding.ActivityPlayerBinding
-import com.practicum.playlistmaker_1.domain.models.Track
-import com.practicum.playlistmaker_1.player.PlayerView
-import com.practicum.playlistmaker_1.player.presenter.PlayerPresenter
+import com.practicum.playlistmaker_1.player.ui.view_model.PlayerViewModel
+import com.practicum.playlistmaker_1.search.domain.models.Track
 import java.text.SimpleDateFormat
 import java.util.*
 
-class PlayerActivity : AppCompatActivity(), PlayerView {
+class PlayerActivity : AppCompatActivity() {
 
-    private lateinit var presenter: PlayerPresenter
-
-    private val playerBinding: ActivityPlayerBinding by lazy {
-        ActivityPlayerBinding.inflate(layoutInflater)
-    }
+    private lateinit var playerBinding: ActivityPlayerBinding
+    private lateinit var viewModel: PlayerViewModel
+    private lateinit var track: Track
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        playerBinding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(playerBinding.root)
 
-        val track = Gson().fromJson(intent.getStringExtra(TRACK), Track::class.java)
-
-        presenter = Creator.providePresenter(
-            view = this,
-            track = track
-        )
-
+        track = Gson().fromJson((intent.getStringExtra(TRACK)), Track::class.java)
         initListeners()
-        drawPlayer(track)
+        drawPlayer()
+
+        viewModel = ViewModelProvider(this, PlayerViewModel.getViewModelFactory(track.previewUrl))[PlayerViewModel::class.java]
+        viewModel.playState.observe(this) { playState ->
+            if (playState) {
+                setPauseIcon()
+            } else {
+                setPlayIcon()
+            }
+        }
+
+        viewModel.playProgress.observe(this) { duration ->
+            playerBinding.time.text = duration
+        }
+
     }
 
     private fun initListeners() {
@@ -49,60 +54,58 @@ class PlayerActivity : AppCompatActivity(), PlayerView {
         }
 
         playerBinding.playButton.setOnClickListener {
-            presenter.playbackControl()
+            viewModel.playbackControl()
+        }
+    }
+
+    private fun setPlayIcon() {
+        playerBinding.playButton.setImageResource(R.drawable.ic_play)
+    }
+
+    private fun setPauseIcon() {
+        playerBinding.playButton.setImageResource(R.drawable.ic_pause)
+    }
+
+    private fun drawPlayer() {
+        playerBinding.apply {
+            Glide
+                .with(mediaTrackImage)
+                .load(track.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
+                .placeholder(R.drawable.placeholder)
+                .centerCrop()
+                .transform(RoundedCorners(resources.getDimensionPixelSize(R.dimen.corner_radius_8)))
+                .into(mediaTrackImage)
+
+            trackName.text = track.trackName
+            artistName.text = track.artistName
+            primaryGenreName.text = track.primaryGenreName
+            country.text = track.country
+
+            trackTime.text =
+                SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
+
+            val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(track.releaseDate)
+            if (date != null) {
+                val formattedDatesString =
+                    SimpleDateFormat("yyyy", Locale.getDefault()).format(date)
+                releaseDate.text = formattedDatesString
+            }
+
+            if (track.collectionName.isNotEmpty()) {
+                collectionName.text = track.collectionName
+            } else {
+                collectionName.visibility = View.GONE
+                trackAlbum.visibility = View.GONE
+            }
         }
     }
 
     override fun onPause() {
         super.onPause()
-        presenter.onViewPaused()
+        viewModel.pausePlayer()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        presenter.onViewDestroyed()
-    }
-
-    override fun setPlayIcon() {
-        playerBinding.playButton.setImageResource(R.drawable.ic_play)
-    }
-
-    override fun setPauseIcon() {
-        playerBinding.playButton.setImageResource(R.drawable.ic_pause)
-    }
-
-    override fun drawPlayer(track: Track) {
-        Glide
-            .with(playerBinding.mediaTrackImage)
-            .load(track.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
-            .placeholder(R.drawable.placeholder)
-            .centerCrop()
-            .transform(RoundedCorners(resources.getDimensionPixelSize(R.dimen.corner_radius_8)))
-            .into(playerBinding.mediaTrackImage)
-
-        playerBinding.trackName.text = track.trackName
-        playerBinding.artistName.text = track.artistName
-        playerBinding.primaryGenreName.text = track.primaryGenreName
-        playerBinding.country.text = track.country
-
-        playerBinding.trackTime.text =
-            SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
-
-        val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(track.releaseDate)
-        if (date != null) {
-            val formattedDatesString = SimpleDateFormat("yyyy", Locale.getDefault()).format(date)
-            playerBinding.releaseDate.text = formattedDatesString
-        }
-
-        if (track.collectionName.isNotEmpty()) {
-            playerBinding.collectionName.text = track.collectionName
-        } else {
-            playerBinding.collectionName.visibility = View.GONE
-            playerBinding.trackAlbum.visibility = View.GONE
-        }
-    }
-
-    override fun setDuration(ms: String) {
-        playerBinding.time.text = ms
+    companion object {
+        const val TRACK = "TRACK"
     }
 }

@@ -3,9 +3,9 @@ package com.practicum.playlistmaker_1.main
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.practicum.playlistmaker_1.search.SearchActivity
+import com.practicum.playlistmaker_1.search.ui.activity.SearchActivity
 import com.practicum.playlistmaker_1.settings.ui.SettingsActivity
-import com.practicum.playlistmaker_1.media_library.ui.MediaLibraryActivity
+import com.practicum.playlistmaker_1.media_library.MediaLibraryActivity
 import com.practicum.playlistmaker_1.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
