@@ -6,11 +6,12 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.google.gson.Gson
 import com.practicum.playlistmaker_1.R
 import com.practicum.playlistmaker_1.databinding.ActivityPlayerBinding
+import com.practicum.playlistmaker_1.player.ui.models.PlayerState
 import com.practicum.playlistmaker_1.player.ui.view_model.PlayerViewModel
 import com.practicum.playlistmaker_1.search.domain.models.Track
+import com.practicum.playlistmaker_1.util.EXTRA_KEY
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -18,55 +19,37 @@ class PlayerActivity : AppCompatActivity() {
 
     private lateinit var playerBinding: ActivityPlayerBinding
     private lateinit var viewModel: PlayerViewModel
-    private lateinit var track: Track
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         playerBinding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(playerBinding.root)
 
-        track = Gson().fromJson((intent.getStringExtra(TRACK)), Track::class.java)
         initListeners()
-        drawPlayer()
 
-        viewModel = ViewModelProvider(this, PlayerViewModel.getViewModelFactory(track.previewUrl))[PlayerViewModel::class.java]
-        viewModel.playState.observe(this) { playState ->
-            if (playState) {
-                setPauseIcon()
-            } else {
+        viewModel = ViewModelProvider(this, PlayerViewModel.getViewModelFactory())[PlayerViewModel::class.java]
+
+        val track = intent.getSerializableExtra(EXTRA_KEY) as Track
+        viewModel.prepare(track.previewUrl)
+
+        viewModel.observeState().observe(this) { state ->
+            playerBinding.playButton.setOnClickListener {
+                controller(state)
+            }
+            if (state == PlayerState.STATE_COMPLETE) {
+                playerBinding.time.text = getString(R.string.track_time)
                 setPlayIcon()
             }
         }
 
-        viewModel.playProgress.observe(this) { duration ->
-            playerBinding.time.text = duration
+        viewModel.observeTime().observe(this) {
+            playerBinding.time.text = it
         }
 
+        showTrack(track)
     }
 
-    private fun initListeners() {
-        playerBinding.toolbarInclude.toolbar.apply {
-            title = ""
-            setSupportActionBar(this)
-            setNavigationOnClickListener {
-                finish()
-            }
-        }
-
-        playerBinding.playButton.setOnClickListener {
-            viewModel.playbackControl()
-        }
-    }
-
-    private fun setPlayIcon() {
-        playerBinding.playButton.setImageResource(R.drawable.ic_play)
-    }
-
-    private fun setPauseIcon() {
-        playerBinding.playButton.setImageResource(R.drawable.ic_pause)
-    }
-
-    private fun drawPlayer() {
+    private fun showTrack(track: Track) {
         playerBinding.apply {
             Glide
                 .with(mediaTrackImage)
@@ -84,7 +67,8 @@ class PlayerActivity : AppCompatActivity() {
             trackTime.text =
                 SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
 
-            val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(track.releaseDate)
+            val date =
+                SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(track.releaseDate)
             if (date != null) {
                 val formattedDatesString =
                     SimpleDateFormat("yyyy", Locale.getDefault()).format(date)
@@ -100,12 +84,46 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        viewModel.pausePlayer()
+    private fun controller(state: PlayerState) {
+        when (state) {
+            PlayerState.STATE_PREPARED, PlayerState.STATE_COMPLETE, PlayerState.STATE_PAUSED -> {
+                viewModel.play()
+                setPauseIcon()
+            }
+
+            PlayerState.STATE_PLAYING -> {
+                viewModel.pause()
+                setPlayIcon()
+            }
+        }
     }
 
-    companion object {
-        const val TRACK = "TRACK"
+    private fun initListeners() {
+        playerBinding.toolbarInclude.toolbar.apply {
+            title = ""
+            setSupportActionBar(this)
+            setNavigationOnClickListener {
+                finish()
+            }
+        }
+
+    }
+
+    private fun setPlayIcon() {
+        playerBinding.playButton.setImageResource(R.drawable.ic_play)
+    }
+
+    private fun setPauseIcon() {
+        playerBinding.playButton.setImageResource(R.drawable.ic_pause)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.release()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.pause()
     }
 }

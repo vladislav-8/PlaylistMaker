@@ -38,7 +38,5 @@ object Creator {
         )
     }
 
-    fun providePlayerInteractor(trackUrl: String): PlayerInteractor {
-        return PlayerInteractorImpl(PlayerRepositoryImpl(trackUrl))
-    }
+    fun providePlayerInteractor () = PlayerInteractorImpl(PlayerRepositoryImpl())
 }

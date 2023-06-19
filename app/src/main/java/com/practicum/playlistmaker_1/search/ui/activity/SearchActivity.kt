@@ -8,7 +8,6 @@ import android.view.View.VISIBLE
 import android.view.inputmethod.InputMethodManager
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
-import com.google.gson.Gson
 import com.practicum.playlistmaker_1.search.domain.models.NetworkError
 import com.practicum.playlistmaker_1.player.ui.activity.PlayerActivity
 import com.practicum.playlistmaker_1.databinding.ActivitySearchBinding
@@ -16,6 +15,7 @@ import com.practicum.playlistmaker_1.search.domain.models.Track
 import com.practicum.playlistmaker_1.search.ui.models.SearchState
 import com.practicum.playlistmaker_1.search.ui.view_model.SearchViewModel
 import com.practicum.playlistmaker_1.search.ui.TrackAdapter
+import com.practicum.playlistmaker_1.util.EXTRA_KEY
 
 class SearchActivity : AppCompatActivity() {
 
@@ -33,43 +33,45 @@ class SearchActivity : AppCompatActivity() {
         setContentView(searchBinding.root)
 
         initListeners()
+        initAdapters()
 
         searchBinding.inputEditText.requestFocus()
         searchBinding.settingsToolbar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
-
-        searchBinding.searchRecycler.adapter = trackAdapter
-        searchBinding.searchHistoryRecycler.adapter = historyAdapter
 
         searchBinding.inputEditText.doOnTextChanged { text, _, _, _ ->
             searchBinding.clearImageView.visibility = clearButtonVisibility(text)
             text?.let { viewModel.searchDebounce(it.toString()) }
         }
 
-        viewModel = ViewModelProvider(
-            this,
-            SearchViewModel.getViewModelFactory(this)
-        )[SearchViewModel::class.java]
-        viewModel.stateLiveData.observe(this) { state ->
-            when (state) {
-                is SearchState.SearchHistory -> {
-                    showHistoryList(state.tracks)
-                }
+        viewModel = ViewModelProvider(this, SearchViewModel.getViewModelFactory(this))[SearchViewModel::class.java]
+        viewModel.stateLiveData.observe(this) {
+            render(it)
+        }
+    }
 
-                is SearchState.Loading -> {
-                    showLoading()
-                }
+    private fun render(state: SearchState) {
+        when (state) {
+            is SearchState.SearchHistory -> {
+                showHistoryList(state.tracks)
+            }
 
-                is SearchState.SearchedTracks -> {
-                    showSearchResult(state.tracks)
-                }
+            is SearchState.Loading -> {
+                showLoading()
+            }
 
-                is SearchState.SearchError -> {
-                    showErrorMessage(state.error)
-                }
+            is SearchState.SearchedTracks -> {
+                showSearchResult(state.tracks)
+            }
+
+            is SearchState.SearchError -> {
+                showErrorMessage(state.error)
             }
         }
+    }
 
-
+    private fun initAdapters() {
+        searchBinding.searchRecycler.adapter = trackAdapter
+        searchBinding.searchHistoryRecycler.adapter = historyAdapter
     }
 
     private fun initListeners() {
@@ -95,10 +97,10 @@ class SearchActivity : AppCompatActivity() {
     private fun showPlayer(track: Track) {
         if (viewModel.clickDebounce()) {
             viewModel.addTrackToHistory(track)
-            val intent = Intent(this, PlayerActivity::class.java).putExtra(
-                PlayerActivity.TRACK,
-                Gson().toJson(track)
-            )
+            val intent = Intent(this, PlayerActivity::class.java)
+            intent.putExtra(
+                EXTRA_KEY, track)
+            viewModel.clickDebounce()
             startActivity(intent)
         }
     }
@@ -131,9 +133,24 @@ class SearchActivity : AppCompatActivity() {
         searchBinding.searchRecycler.visibility = VISIBLE
     }
 
-    private fun showErrorMessage(networkError: NetworkError) {
+    private fun showErrorMessage(error: NetworkError) {
         clearContent()
-        searchBinding.internetProblem.visibility = VISIBLE
+        when(error) {
+            NetworkError.EMPTY_RESULT -> {
+                searchBinding.searchRecycler.visibility = GONE
+                searchBinding.internetProblem.visibility = GONE
+                searchBinding.searchHistoryLayout.visibility = GONE
+                searchBinding.nothingFound.visibility = VISIBLE
+                searchBinding.progressBar.visibility = GONE
+            }
+            NetworkError.CONNECTION_ERROR -> {
+                searchBinding.searchRecycler.visibility = GONE
+                searchBinding.nothingFound.visibility = GONE
+                searchBinding.searchHistoryLayout.visibility = GONE
+                searchBinding.internetProblem.visibility = VISIBLE
+                searchBinding.progressBar.visibility = GONE
+            }
+        }
     }
 
     private fun clearContent() {

@@ -5,31 +5,26 @@ import com.practicum.playlistmaker_1.player.domain.PlayerRepository
 import com.practicum.playlistmaker_1.player.ui.models.PlayerState
 
 class PlayerInteractorImpl(private val repository: PlayerRepository): PlayerInteractor {
-
-    override fun preparePlayer() {
-        repository.prepare()
+    override fun preparePlayer(url: String) {
+        repository.preparePlayer(url)
     }
+
     override fun startPlayer() {
-        repository.start()
+        repository.startPlayer()
     }
 
     override fun pausePlayer() {
-        repository.pause()
+        repository.pausePlayer()
     }
 
-    override fun stopPlayer() {
+    override fun release() {
         repository.release()
     }
 
-    override fun getCurrentPosition(): Int {
-        return repository.getCurrentPosition()
+    override fun getPosition(): Long = repository.getPosition()
+
+    override fun setOnStateChangeListener(callback: (PlayerState) -> Unit) {
+        repository.setOnStateChangeListener(callback)
     }
 
-    override fun getPlayerState(): PlayerState {
-        return repository.playerState
-    }
-
-    override fun setTrackCompletionListener(listener: (() -> Unit)) {
-        repository.completionListener = listener
-    }
 }

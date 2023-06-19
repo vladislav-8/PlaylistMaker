@@ -4,42 +4,34 @@ import android.media.MediaPlayer
 import com.practicum.playlistmaker_1.player.domain.PlayerRepository
 import com.practicum.playlistmaker_1.player.ui.models.PlayerState
 
-class   PlayerRepositoryImpl (private val trackUrl: String): PlayerRepository {
-
-    override var playerState = PlayerState.DEFAULT
+class PlayerRepositoryImpl : PlayerRepository {
     private val mediaPlayer = MediaPlayer()
-    override var completionListener: () -> Unit = { }
-
-    override fun prepare() {
-        mediaPlayer.setDataSource(trackUrl)
+    private var stateCallback: ((PlayerState) -> Unit)? = null
+    override fun preparePlayer(url: String) {
+        mediaPlayer.setDataSource(url)
         mediaPlayer.prepareAsync()
-
         mediaPlayer.setOnPreparedListener {
-            playerState = PlayerState.PREPARED
+            stateCallback?.invoke(PlayerState.STATE_PREPARED)
         }
-
         mediaPlayer.setOnCompletionListener {
-            playerState = PlayerState.PREPARED
-            completionListener.invoke()
+            stateCallback?.invoke(PlayerState.STATE_COMPLETE)
         }
     }
-
-    override fun start() {
+    override fun startPlayer() {
         mediaPlayer.start()
-        playerState = PlayerState.PLAYING
+        stateCallback?.invoke(PlayerState.STATE_PLAYING)
     }
-
-    override fun pause() {
+    override fun pausePlayer() {
         mediaPlayer.pause()
-        playerState = PlayerState.PAUSED
+        stateCallback?.invoke(PlayerState.STATE_PAUSED)
     }
-
     override fun release() {
         mediaPlayer.release()
     }
-
-    override fun getCurrentPosition(): Int {
-        return mediaPlayer.currentPosition
+    override fun getPosition () = mediaPlayer.currentPosition.toLong()
+    override fun setOnStateChangeListener(callback: (PlayerState) -> Unit) {
+        stateCallback = callback
     }
+
 }
 
