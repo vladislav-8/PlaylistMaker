@@ -116,6 +116,7 @@
                 android:text="@string/internet_problem" />
 
             <TextView
+                android:id="@+id/errorText"
                 style="@style/placeholder_internet_problem"
                 android:text="@string/check_internet" />
 
