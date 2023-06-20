@@ -3,7 +3,6 @@ package com.practicum.playlistmaker_1.player.ui.activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker_1.R
@@ -12,13 +11,14 @@ import com.practicum.playlistmaker_1.player.ui.models.PlayerState
 import com.practicum.playlistmaker_1.player.ui.view_model.PlayerViewModel
 import com.practicum.playlistmaker_1.search.domain.models.Track
 import com.practicum.playlistmaker_1.util.EXTRA_KEY
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
 class PlayerActivity : AppCompatActivity() {
 
     private lateinit var playerBinding: ActivityPlayerBinding
-    private lateinit var viewModel: PlayerViewModel
+    private val viewModel by viewModel<PlayerViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,10 +27,8 @@ class PlayerActivity : AppCompatActivity() {
 
         initListeners()
 
-        viewModel = ViewModelProvider(this, PlayerViewModel.getViewModelFactory())[PlayerViewModel::class.java]
-
         val track = intent.getSerializableExtra(EXTRA_KEY) as Track
-        viewModel.prepare(track.previewUrl)
+        track.previewUrl?.let { viewModel.prepare(it) }
 
         viewModel.observeState().observe(this) { state ->
             playerBinding.playButton.setOnClickListener {
@@ -68,7 +66,11 @@ class PlayerActivity : AppCompatActivity() {
                 SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
 
             val date =
-                SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(track.releaseDate)
+                track.releaseDate?.let {
+                    SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(
+                        it
+                    )
+                }
             if (date != null) {
                 val formattedDatesString =
                     SimpleDateFormat("yyyy", Locale.getDefault()).format(date)
