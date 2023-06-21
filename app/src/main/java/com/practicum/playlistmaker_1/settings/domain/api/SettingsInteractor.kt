@@ -1,8 +1,8 @@
-package com.practicum.playlistmaker_1.settings.data
+package com.practicum.playlistmaker_1.settings.domain.api
 
 import com.practicum.playlistmaker_1.settings.domain.models.ThemeSettings
 
-interface SettingsRepository {
+interface SettingsInteractor {
     fun getThemeSettings(): ThemeSettings
     fun updateThemeSetting(settings: ThemeSettings)
 }

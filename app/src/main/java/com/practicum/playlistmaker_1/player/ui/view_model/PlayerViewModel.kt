@@ -5,12 +5,8 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.practicum.playlistmaker_1.player.domain.PlayerInteractor
-import com.practicum.playlistmaker_1.player.ui.models.PlayerState
-import com.practicum.playlistmaker_1.util.Creator
+import com.practicum.playlistmaker_1.player.domain.api.PlayerInteractor
+import com.practicum.playlistmaker_1.player.domain.models.PlayerState
 import com.practicum.playlistmaker_1.util.formatAsTime
 
 class PlayerViewModel(val playerInteractor: PlayerInteractor) : ViewModel() {
@@ -54,17 +50,11 @@ class PlayerViewModel(val playerInteractor: PlayerInteractor) : ViewModel() {
     }
 
     fun release() {
-        playerInteractor.release()
+        playerInteractor.reset()
         handler.removeCallbacks(time)
     }
 
     companion object {
         private const val TRACK_TIME_DELAY = 300L
-
-        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                PlayerViewModel(Creator.providePlayerInteractor())
-            }
-        }
     }
 }

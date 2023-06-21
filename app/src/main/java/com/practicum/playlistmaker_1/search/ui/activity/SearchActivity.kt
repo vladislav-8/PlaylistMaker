@@ -7,7 +7,6 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.inputmethod.InputMethodManager
 import androidx.core.widget.doOnTextChanged
-import androidx.lifecycle.ViewModelProvider
 import com.practicum.playlistmaker_1.search.domain.models.NetworkError
 import com.practicum.playlistmaker_1.player.ui.activity.PlayerActivity
 import com.practicum.playlistmaker_1.databinding.ActivitySearchBinding
@@ -16,11 +15,12 @@ import com.practicum.playlistmaker_1.search.ui.models.SearchState
 import com.practicum.playlistmaker_1.search.ui.view_model.SearchViewModel
 import com.practicum.playlistmaker_1.search.ui.TrackAdapter
 import com.practicum.playlistmaker_1.util.EXTRA_KEY
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
 
     private lateinit var searchBinding: ActivitySearchBinding
-    private lateinit var viewModel: SearchViewModel
+    private val viewModel by viewModel<SearchViewModel>()
 
     private var searchInputQuery = ""
 
@@ -43,7 +43,6 @@ class SearchActivity : AppCompatActivity() {
             text?.let { viewModel.searchDebounce(it.toString()) }
         }
 
-        viewModel = ViewModelProvider(this, SearchViewModel.getViewModelFactory(this))[SearchViewModel::class.java]
         viewModel.stateLiveData.observe(this) {
             render(it)
         }
