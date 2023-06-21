@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker_1.search.data
+package com.practicum.playlistmaker_1.search.domain.repository
 
 import com.practicum.playlistmaker_1.search.domain.models.NetworkError
 import com.practicum.playlistmaker_1.search.domain.models.Track

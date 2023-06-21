@@ -1,7 +1,6 @@
 package com.practicum.playlistmaker_1.di
 
-import android.content.Context
-import com.practicum.playlistmaker_1.search.data.SearchRepository
+import com.practicum.playlistmaker_1.search.domain.repository.SearchRepository
 import com.practicum.playlistmaker_1.search.data.impl.SearchRepositoryImpl
 import com.practicum.playlistmaker_1.search.data.network.NetworkClient
 import com.practicum.playlistmaker_1.search.data.network.RetrofitNetworkClient
@@ -11,7 +10,6 @@ import com.practicum.playlistmaker_1.search.data.storage.SharedPrefsHistoryStora
 import com.practicum.playlistmaker_1.search.domain.SearchInteractor
 import com.practicum.playlistmaker_1.search.domain.impl.SearchInteractorImpl
 import com.practicum.playlistmaker_1.search.ui.view_model.SearchViewModel
-import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit

@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker_1.player.ui.models
+package com.practicum.playlistmaker_1.player.domain.models
 
 enum class PlayerState {
     STATE_PREPARED ,

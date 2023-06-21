@@ -1,8 +1,8 @@
 package com.practicum.playlistmaker_1.player.domain.impl
 
 import com.practicum.playlistmaker_1.player.domain.PlayerInteractor
-import com.practicum.playlistmaker_1.player.domain.PlayerRepository
-import com.practicum.playlistmaker_1.player.ui.models.PlayerState
+import com.practicum.playlistmaker_1.player.domain.repository.PlayerRepository
+import com.practicum.playlistmaker_1.player.domain.models.PlayerState
 
 class PlayerInteractorImpl(private val repository: PlayerRepository): PlayerInteractor {
     override fun preparePlayer(url: String) {

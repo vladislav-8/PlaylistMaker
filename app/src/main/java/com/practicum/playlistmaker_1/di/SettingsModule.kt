@@ -2,7 +2,7 @@ package com.practicum.playlistmaker_1.di
 
 import android.content.Context
 import com.practicum.playlistmaker_1.App
-import com.practicum.playlistmaker_1.settings.data.SettingsRepository
+import com.practicum.playlistmaker_1.settings.domain.repository.SettingsRepository
 import com.practicum.playlistmaker_1.settings.data.impl.SettingsRepositoryImpl
 import com.practicum.playlistmaker_1.settings.data.storage.SettingsThemeStorage
 import com.practicum.playlistmaker_1.settings.data.storage.SharedPrefsThemeStorage
