@@ -2,11 +2,11 @@ package com.practicum.playlistmaker_1.di
 
 import android.content.Context
 import com.practicum.playlistmaker_1.App
-import com.practicum.playlistmaker_1.settings.domain.repository.SettingsRepository
+import com.practicum.playlistmaker_1.settings.domain.api.SettingsRepository
 import com.practicum.playlistmaker_1.settings.data.impl.SettingsRepositoryImpl
 import com.practicum.playlistmaker_1.settings.data.storage.SettingsThemeStorage
 import com.practicum.playlistmaker_1.settings.data.storage.SharedPrefsThemeStorage
-import com.practicum.playlistmaker_1.settings.domain.SettingsInteractor
+import com.practicum.playlistmaker_1.settings.domain.api.SettingsInteractor
 import com.practicum.playlistmaker_1.settings.domain.impl.SettingsInteractorImpl
 import com.practicum.playlistmaker_1.settings.ui.SettingsViewModel
 import org.koin.android.ext.koin.androidApplication

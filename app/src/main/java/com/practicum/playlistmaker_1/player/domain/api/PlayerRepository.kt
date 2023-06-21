@@ -1,8 +1,8 @@
-package com.practicum.playlistmaker_1.player.domain
+package com.practicum.playlistmaker_1.player.domain.api
 
 import com.practicum.playlistmaker_1.player.domain.models.PlayerState
 
-interface PlayerInteractor {
+interface PlayerRepository {
     fun preparePlayer(url: String)
     fun startPlayer()
     fun pausePlayer()

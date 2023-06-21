@@ -1,6 +1,6 @@
 package com.practicum.playlistmaker_1.search.data.impl
 
-import com.practicum.playlistmaker_1.search.domain.repository.SearchRepository
+import com.practicum.playlistmaker_1.search.domain.api.SearchRepository
 import com.practicum.playlistmaker_1.search.data.network.NetworkClient
 import com.practicum.playlistmaker_1.search.data.storage.SearchHistoryStorage
 import com.practicum.playlistmaker_1.search.domain.models.NetworkError

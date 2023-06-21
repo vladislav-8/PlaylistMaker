@@ -4,7 +4,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.practicum.playlistmaker_1.App
-import com.practicum.playlistmaker_1.settings.domain.SettingsInteractor
+import com.practicum.playlistmaker_1.settings.domain.api.SettingsInteractor
 import com.practicum.playlistmaker_1.settings.domain.models.ThemeSettings
 import com.practicum.playlistmaker_1.sharing.SharingInteractor
 
