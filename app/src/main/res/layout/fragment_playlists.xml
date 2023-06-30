@@ -1,0 +1,21 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    
+    <Button
+        android:id="@+id/newPlaylist"
+        style="@style/refresh_button"
+        android:layout_marginTop="@dimen/marginTop_16"
+        android:fontFamily="@font/ys_display"
+        android:text="@string/new_playlist"
+        app:cornerRadius="@dimen/corner_radius_54"/>
+
+    <TextView
+        android:id="@+id/nothingFound"
+        style="@style/placeholder_not_found"
+        android:layout_marginTop="@dimen/layout_marginTop_120"
+        android:text="@string/you_did_not_create_anyPlaylist"
+        android:visibility="visible"
+        app:drawableTopCompat="@drawable/nothing_found" />
+</FrameLayout>

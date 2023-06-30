@@ -9,7 +9,7 @@
     <style name="background_settings">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:background">#F5F5F5</item>
+        <item name="android:background">@color/white</item>
         <item name="android:orientation">vertical</item>
     </style>
 
@@ -183,6 +183,20 @@
         <item name="android:layout_width">@dimen/layout_width_48</item>
         <item name="android:layout_height">@dimen/layout_height_48</item>
         <item name="android:backgroundTint">@color/search_form_text_hint_color</item>
+    </style>
+
+    <style name="tabLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/white</item>
+        <item name="tabTextColor">@color/black</item>
+        <item name="tabIndicatorColor">@color/black</item>
+        <item name="tabMode">fixed</item>
+    </style>
+
+    <style name="font_style" parent="@android:style/TextAppearance.Small">
+        <item name="android:fontFamily">@font/ys_display</item>
+        <item name="android:textSize">@dimen/textSize_16</item>
     </style>
 
 </resources>
