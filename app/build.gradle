@@ -59,4 +59,7 @@ dependencies {
 
     //koin
     implementation "io.insert-koin:koin-android:3.3.0"
+
+    //viewPager
+    implementation 'com.google.android.material:material:1.8.0'
 }

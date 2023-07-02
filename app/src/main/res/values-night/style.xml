@@ -164,4 +164,18 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="tabLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/black_button</item>
+        <item name="tabTextColor">@color/white</item>
+        <item name="tabIndicatorColor">@color/white</item>
+        <item name="tabMode">fixed</item>
+    </style>
+
+    <style name="font_style" parent="@android:style/TextAppearance.Small">
+        <item name="android:fontFamily">@font/ys_display</item>
+        <item name="android:textSize">@dimen/textSize_16</item>
+    </style>
+
 </resources>
