@@ -1,25 +1,28 @@
 package com.practicum.playlistmaker_1.search.ui.activity
 
+import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View.GONE
-import android.view.View.VISIBLE
+import android.provider.MediaStore.Audio.AudioColumns.TRACK
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.core.widget.doOnTextChanged
-import com.practicum.playlistmaker_1.search.domain.models.NetworkError
+import com.practicum.playlistmaker_1.databinding.FragmentSearchBinding
 import com.practicum.playlistmaker_1.player.ui.activity.PlayerActivity
-import com.practicum.playlistmaker_1.databinding.ActivitySearchBinding
+import com.practicum.playlistmaker_1.search.domain.models.NetworkError
 import com.practicum.playlistmaker_1.search.domain.models.Track
+import com.practicum.playlistmaker_1.search.ui.TrackAdapter
 import com.practicum.playlistmaker_1.search.ui.models.SearchState
 import com.practicum.playlistmaker_1.search.ui.view_model.SearchViewModel
-import com.practicum.playlistmaker_1.search.ui.TrackAdapter
 import com.practicum.playlistmaker_1.util.EXTRA_KEY
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : AppCompatActivity() {
+class SearchFragment : Fragment() {
 
-    private lateinit var searchBinding: ActivitySearchBinding
+    private lateinit var searchBinding: FragmentSearchBinding
     private val viewModel by viewModel<SearchViewModel>()
 
     private var searchInputQuery = ""
@@ -27,23 +30,29 @@ class SearchActivity : AppCompatActivity() {
     private val trackAdapter = TrackAdapter { showPlayer(it) }
     private val historyAdapter = TrackAdapter { showPlayer(it) }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        searchBinding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(searchBinding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        searchBinding = FragmentSearchBinding.inflate(inflater, container, false)
+        return searchBinding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         initListeners()
         initAdapters()
 
         searchBinding.inputEditText.requestFocus()
-        searchBinding.settingsToolbar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
 
         searchBinding.inputEditText.doOnTextChanged { text, _, _, _ ->
             searchBinding.clearImageView.visibility = clearButtonVisibility(text)
             text?.let { viewModel.searchDebounce(it.toString()) }
         }
 
-        viewModel.stateLiveData.observe(this) {
+        viewModel.stateLiveData.observe(viewLifecycleOwner) {
             render(it)
         }
     }
@@ -85,20 +94,19 @@ class SearchActivity : AppCompatActivity() {
             searchBinding.inputEditText.text?.clear()
             clearContent()
 
-            val view = this.currentFocus
-            if (view != null) {
-                val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(view.windowToken, 0)
+            val imm =
+                requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(requireView().windowToken, 0)
             }
         }
-    }
+
 
     private fun showPlayer(track: Track) {
         if (viewModel.clickDebounce()) {
             viewModel.addTrackToHistory(track)
-            val intent = Intent(this, PlayerActivity::class.java)
-            intent.putExtra(
-                EXTRA_KEY, track)
+            val intent = Intent(requireContext(), PlayerActivity::class.java).apply {
+                putExtra(EXTRA_KEY, track)
+            }
             viewModel.clickDebounce()
             startActivity(intent)
         }
@@ -106,9 +114,9 @@ class SearchActivity : AppCompatActivity() {
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
         return if (s.isNullOrEmpty()) {
-            GONE
+            View.GONE
         } else {
-            VISIBLE
+            View.VISIBLE
         }
     }
 
@@ -116,62 +124,54 @@ class SearchActivity : AppCompatActivity() {
         clearContent()
         historyAdapter.tracks = tracks as ArrayList<Track>
         if (tracks.isNotEmpty()) {
-            searchBinding.searchHistoryLayout.visibility = VISIBLE
+            searchBinding.searchHistoryLayout.visibility = View.VISIBLE
         }
     }
 
     private fun showLoading() {
         clearContent()
-        searchBinding.progressBar.visibility = VISIBLE
+        searchBinding.progressBar.visibility = View.VISIBLE
     }
 
     private fun showSearchResult(tracks: List<Track>) {
         clearContent()
         trackAdapter.clearTracks()
         trackAdapter.tracks.addAll(tracks)
-        searchBinding.searchRecycler.visibility = VISIBLE
+        searchBinding.searchRecycler.visibility = View.VISIBLE
     }
 
     private fun showErrorMessage(error: NetworkError) {
         clearContent()
-        when(error) {
+        when (error) {
             NetworkError.EMPTY_RESULT -> {
-                searchBinding.searchRecycler.visibility = GONE
-                searchBinding.internetProblem.visibility = GONE
-                searchBinding.searchHistoryLayout.visibility = GONE
-                searchBinding.nothingFound.visibility = VISIBLE
-                searchBinding.progressBar.visibility = GONE
+                searchBinding.searchRecycler.visibility = View.GONE
+                searchBinding.internetProblem.visibility = View.GONE
+                searchBinding.searchHistoryLayout.visibility = View.GONE
+                searchBinding.nothingFound.visibility = View.VISIBLE
+                searchBinding.progressBar.visibility = View.GONE
             }
+
             NetworkError.CONNECTION_ERROR -> {
-                searchBinding.searchRecycler.visibility = GONE
-                searchBinding.nothingFound.visibility = GONE
-                searchBinding.searchHistoryLayout.visibility = GONE
-                searchBinding.internetProblem.visibility = VISIBLE
-                searchBinding.progressBar.visibility = GONE
+                searchBinding.searchRecycler.visibility = View.GONE
+                searchBinding.nothingFound.visibility = View.GONE
+                searchBinding.searchHistoryLayout.visibility = View.GONE
+                searchBinding.internetProblem.visibility = View.VISIBLE
+                searchBinding.progressBar.visibility = View.GONE
             }
         }
     }
 
     private fun clearContent() {
-        searchBinding.nothingFound.visibility = GONE
-        searchBinding.internetProblem.visibility = GONE
-        searchBinding.searchHistoryLayout.visibility = GONE
-        searchBinding.searchRecycler.visibility = GONE
-        searchBinding.progressBar.visibility = GONE
+        searchBinding.nothingFound.visibility = View.GONE
+        searchBinding.internetProblem.visibility = View.GONE
+        searchBinding.searchHistoryLayout.visibility = View.GONE
+        searchBinding.searchRecycler.visibility = View.GONE
+        searchBinding.progressBar.visibility = View.GONE
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(SEARCH_QUERY, searchInputQuery)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        searchInputQuery = savedInstanceState.getString(SEARCH_QUERY, "")
-        if (searchInputQuery.isNotEmpty()) {
-            searchBinding.inputEditText.setText(searchInputQuery)
-            viewModel.searchTracks(searchInputQuery)
-        }
     }
 
     companion object {
