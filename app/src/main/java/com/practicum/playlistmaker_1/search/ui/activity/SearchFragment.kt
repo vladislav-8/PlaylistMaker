@@ -3,7 +3,6 @@ package com.practicum.playlistmaker_1.search.ui.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.provider.MediaStore.Audio.AudioColumns.TRACK
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -167,14 +166,5 @@ class SearchFragment : Fragment() {
         searchBinding.searchHistoryLayout.visibility = View.GONE
         searchBinding.searchRecycler.visibility = View.GONE
         searchBinding.progressBar.visibility = View.GONE
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(SEARCH_QUERY, searchInputQuery)
-    }
-
-    companion object {
-        const val SEARCH_QUERY = "search_query"
     }
 }
