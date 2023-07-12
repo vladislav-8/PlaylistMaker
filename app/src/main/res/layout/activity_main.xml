@@ -1,42 +1,27 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/background_main">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.practicum.playlistmaker_1.main.MainActivity">
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/marginStart"
-        android:fontFamily="@font/ys_display"
-        android:gravity="top"
-        android:paddingTop="@dimen/paddingTop"
-        android:paddingBottom="@dimen/paddingBottom"
-        android:text="@string/title"
-        android:textColor="@color/white"
-        android:textSize="@dimen/textSize"
-        android:textStyle="bold" />
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/container_view"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:defaultNavHost="true"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navGraph="@navigation/main_navigation_graph" />
 
-    <Button
-        android:id="@+id/button_search"
-        style="@style/ButtonStyle_Main"
-        android:text="@string/search"
-        app:icon="@drawable/ic_baseline_search_24"
-        tools:ignore="VisualLintButtonSize" />
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        style="@style/NavigationViewStyle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/button_media"
-        style="@style/ButtonStyle_Main"
-        android:text="@string/media"
-        app:icon="@drawable/ic_baseline_library_music_24"
-        tools:ignore="VisualLintButtonSize" />
-
-    <Button
-        android:id="@+id/button_settings"
-        style="@style/ButtonStyle_Main"
-        android:text="@string/settings"
-        app:icon="@drawable/ic_baseline_settings_24"
-        tools:ignore="VisualLintButtonSize" />
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

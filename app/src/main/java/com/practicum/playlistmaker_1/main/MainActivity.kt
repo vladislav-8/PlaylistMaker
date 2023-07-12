@@ -1,11 +1,11 @@
 package com.practicum.playlistmaker_1.main
 
-import android.content.Intent
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.practicum.playlistmaker_1.search.ui.activity.SearchActivity
-import com.practicum.playlistmaker_1.settings.ui.SettingsActivity
-import com.practicum.playlistmaker_1.media_library.ui.activity.MediaLibraryActivity
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
+import com.practicum.playlistmaker_1.R
 import com.practicum.playlistmaker_1.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -17,20 +17,10 @@ class MainActivity : AppCompatActivity() {
         mainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mainBinding.root)
 
-        mainBinding.buttonSearch.setOnClickListener {
-            val displayIntent = Intent(this, SearchActivity::class.java)
-            startActivity(displayIntent)
-        }
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.container_view) as NavHostFragment
+        val navController = navHostFragment.navController
 
-        mainBinding.buttonMedia.setOnClickListener {
-            val displayIntent = Intent(this, MediaLibraryActivity::class.java)
-            startActivity(displayIntent)
-        }
-
-        mainBinding.buttonSettings.setOnClickListener {
-            val displayIntent = Intent(this, SettingsActivity::class.java)
-            startActivity(displayIntent)
-        }
+        mainBinding.bottomNavigationView.setupWithNavController(navController)
     }
 }
 
