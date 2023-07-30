@@ -10,6 +10,7 @@ import com.practicum.playlistmaker_1.search.data.storage.SharedPrefsHistoryStora
 import com.practicum.playlistmaker_1.search.domain.api.SearchInteractor
 import com.practicum.playlistmaker_1.search.domain.impl.SearchInteractorImpl
 import com.practicum.playlistmaker_1.search.ui.view_model.SearchViewModel
+import com.practicum.playlistmaker_1.util.BASE_URL
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -32,7 +33,7 @@ val searchModule = module {
     }
 
     single<NetworkClient> {
-        RetrofitNetworkClient(api = get())
+        RetrofitNetworkClient(api = get(), context = get())
     }
 
     single<SearchHistoryStorage> {
@@ -40,7 +41,7 @@ val searchModule = module {
     }
 
     single<TracksApi> {
-        Retrofit.Builder().baseUrl("http://itunes.apple.com")
+        Retrofit.Builder().baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(TracksApi::class.java)

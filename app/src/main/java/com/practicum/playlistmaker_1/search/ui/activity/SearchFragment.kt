@@ -89,15 +89,9 @@ class SearchFragment : Fragment() {
             viewModel.clearHistory()
         }
         searchBinding.clearImageView.setOnClickListener {
-            viewModel.clearSearchText()
-            searchBinding.inputEditText.text?.clear()
-            clearContent()
-
-            val imm =
-                requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(requireView().windowToken, 0)
-            }
+            searchClearShowHistory()
         }
+    }
 
 
     private fun showPlayer(track: Track) {
@@ -106,7 +100,6 @@ class SearchFragment : Fragment() {
             val intent = Intent(requireContext(), PlayerActivity::class.java).apply {
                 putExtra(EXTRA_KEY, track)
             }
-            viewModel.clickDebounce()
             startActivity(intent)
         }
     }
@@ -117,6 +110,16 @@ class SearchFragment : Fragment() {
         } else {
             View.VISIBLE
         }
+    }
+
+    private fun searchClearShowHistory() {
+        viewModel.clearSearchText()
+        searchBinding.inputEditText.text?.clear()
+        clearContent()
+
+        val imm =
+            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(requireView().windowToken, 0)
     }
 
     private fun showHistoryList(tracks: List<Track>) {

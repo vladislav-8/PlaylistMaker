@@ -3,8 +3,11 @@ package com.practicum.playlistmaker_1.player.data
 import android.media.MediaPlayer
 import com.practicum.playlistmaker_1.player.domain.api.PlayerRepository
 import com.practicum.playlistmaker_1.player.domain.models.PlayerState
+import kotlinx.coroutines.Job
 
 class PlayerRepositoryImpl(private val mediaPlayer: MediaPlayer) : PlayerRepository {
+
+    private var timerJob: Job? = null
 
     private var stateCallback: ((PlayerState) -> Unit)? = null
     override fun preparePlayer(url: String) {
@@ -32,6 +35,5 @@ class PlayerRepositoryImpl(private val mediaPlayer: MediaPlayer) : PlayerReposit
     override fun setOnStateChangeListener(callback: (PlayerState) -> Unit) {
         stateCallback = callback
     }
-
 }
 
