@@ -59,6 +59,7 @@ class SearchFragment : Fragment() {
     private fun render(state: SearchState) {
         when (state) {
             is SearchState.SearchHistory -> {
+                historyAdapter.tracks = arrayListOf()
                 showHistoryList(state.tracks)
             }
 

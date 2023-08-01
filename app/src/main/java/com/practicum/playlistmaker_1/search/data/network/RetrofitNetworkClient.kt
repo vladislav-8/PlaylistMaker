@@ -3,6 +3,10 @@ package com.practicum.playlistmaker_1.search.data.network
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import com.practicum.playlistmaker_1.util.STATUS_CODE_BAD_REQUEST
+import com.practicum.playlistmaker_1.util.STATUS_CODE_NO_NETWORK_CONNECTION
+import com.practicum.playlistmaker_1.util.STATUS_CODE_SERVER_ERROR
+import com.practicum.playlistmaker_1.util.STATUS_CODE_SUCCESS
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -13,19 +17,19 @@ class RetrofitNetworkClient(
 
     override suspend fun doRequest(dto: Any): Response {
         if (!isConnected()) {
-            return Response().apply { resultCode = -1 }
+            return Response().apply { resultCode = STATUS_CODE_NO_NETWORK_CONNECTION }
         }
 
         if (dto !is TrackSearchRequest) {
-            return Response().apply { resultCode = 400 }
+            return Response().apply { resultCode = STATUS_CODE_BAD_REQUEST }
         }
 
         return withContext(Dispatchers.IO) {
             try {
                 val response = api.searchTrack(dto.expression)
-                response.apply { resultCode = 200 }
+                response.apply { resultCode = STATUS_CODE_SUCCESS }
             } catch (e: Throwable) {
-                Response().apply { resultCode = 500 }
+                Response().apply { resultCode = STATUS_CODE_SERVER_ERROR }
             }
         }
     }

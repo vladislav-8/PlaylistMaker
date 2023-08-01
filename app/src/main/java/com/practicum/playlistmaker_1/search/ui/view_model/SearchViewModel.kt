@@ -1,6 +1,5 @@
 package com.practicum.playlistmaker_1.search.ui.view_model
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,7 +8,7 @@ import com.practicum.playlistmaker_1.search.domain.api.SearchInteractor
 import com.practicum.playlistmaker_1.search.domain.models.NetworkError
 import com.practicum.playlistmaker_1.search.domain.models.Track
 import com.practicum.playlistmaker_1.search.ui.models.SearchState
-import com.practicum.playlistmaker_1.util.CLICK_DEBOUNCE_DELAY
+import com.practicum.playlistmaker_1.util.CLICK_DEBOUNCE_DELAY_MILLIS
 import com.practicum.playlistmaker_1.util.maxHistorySize
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -30,7 +29,6 @@ class SearchViewModel(
     private var latestSearchText: String? = null
 
     init {
-        Log.d("TAG", "tut magiya")
         historyList.addAll(searchInteractor.getHistory())
         _stateLiveData.postValue(SearchState.SearchHistory(historyList))
     }
@@ -77,18 +75,15 @@ class SearchViewModel(
     }
 
     fun clearHistory() {
-        Log.d("TAG", "ya udalil istoriyu")
         historyList.clear()
         _stateLiveData.postValue(SearchState.SearchHistory(historyList))
     }
 
     fun clearSearchText() {
-        Log.d("TAG", "ya udalil poisk")
         _stateLiveData.postValue(SearchState.SearchHistory(historyList))
     }
 
     fun addTrackToHistory(track: Track) {
-        Log.d("TAG", "ya dobavil trek")
         if (historyList.contains(track)) {
             historyList.removeAt(historyList.indexOf(track))
         } else if (historyList.size == maxHistorySize) {
@@ -105,7 +100,7 @@ class SearchViewModel(
         latestSearchText = changedText
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
-            delay(CLICK_DEBOUNCE_DELAY)
+            delay(CLICK_DEBOUNCE_DELAY_MILLIS)
             searchTracks(changedText)
         }
     }
@@ -114,7 +109,7 @@ class SearchViewModel(
         val current = isClickAllowed
         if (isClickAllowed) {
             viewModelScope.launch {
-                delay(CLICK_DEBOUNCE_DELAY)
+                delay(CLICK_DEBOUNCE_DELAY_MILLIS)
                 isClickAllowed = true
             }
         }

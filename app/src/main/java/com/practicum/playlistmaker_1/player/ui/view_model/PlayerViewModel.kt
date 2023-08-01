@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.practicum.playlistmaker_1.player.domain.api.PlayerInteractor
 import com.practicum.playlistmaker_1.player.domain.models.PlayerState
-import com.practicum.playlistmaker_1.util.DELAY_TIME
+import com.practicum.playlistmaker_1.util.DELAY_TIME_MILLIS
 import com.practicum.playlistmaker_1.util.formatAsTime
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -33,7 +33,7 @@ class PlayerViewModel(val playerInteractor: PlayerInteractor) : ViewModel() {
     private fun startTimer () {
         timerJob = viewModelScope.launch {
             while(isActive) {
-                delay(DELAY_TIME)
+                delay(DELAY_TIME_MILLIS)
                 timeLiveData.postValue(playerInteractor.getPosition().formatAsTime())
             }
         }
