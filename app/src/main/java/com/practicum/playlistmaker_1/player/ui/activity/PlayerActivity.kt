@@ -121,7 +121,7 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel.release()
+        viewModel.reset()
     }
 
     override fun onPause() {
