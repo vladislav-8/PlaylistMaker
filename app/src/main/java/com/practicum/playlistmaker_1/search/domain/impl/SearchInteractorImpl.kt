@@ -3,7 +3,7 @@ package com.practicum.playlistmaker_1.search.domain.impl
 import com.practicum.playlistmaker_1.search.domain.models.Track
 import com.practicum.playlistmaker_1.search.domain.api.SearchRepository
 import com.practicum.playlistmaker_1.search.domain.api.SearchInteractor
-import com.practicum.playlistmaker_1.util.Resource
+import com.practicum.playlistmaker_1.common.util.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 

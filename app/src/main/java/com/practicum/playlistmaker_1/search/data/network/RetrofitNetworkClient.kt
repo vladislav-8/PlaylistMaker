@@ -3,10 +3,6 @@ package com.practicum.playlistmaker_1.search.data.network
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import com.practicum.playlistmaker_1.util.STATUS_CODE_BAD_REQUEST
-import com.practicum.playlistmaker_1.util.STATUS_CODE_NO_NETWORK_CONNECTION
-import com.practicum.playlistmaker_1.util.STATUS_CODE_SERVER_ERROR
-import com.practicum.playlistmaker_1.util.STATUS_CODE_SUCCESS
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -48,5 +44,12 @@ class RetrofitNetworkClient(
             }
         }
         return false
+    }
+
+    companion object {
+        const val STATUS_CODE_SUCCESS = 200
+        const val STATUS_CODE_SERVER_ERROR = 500
+        const val STATUS_CODE_BAD_REQUEST = 400
+        const val STATUS_CODE_NO_NETWORK_CONNECTION = -1
     }
 }

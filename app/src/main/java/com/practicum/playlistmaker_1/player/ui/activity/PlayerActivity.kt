@@ -10,7 +10,7 @@ import com.practicum.playlistmaker_1.databinding.ActivityPlayerBinding
 import com.practicum.playlistmaker_1.player.domain.models.PlayerState
 import com.practicum.playlistmaker_1.player.ui.view_model.PlayerViewModel
 import com.practicum.playlistmaker_1.search.domain.models.Track
-import com.practicum.playlistmaker_1.util.EXTRA_KEY
+import com.practicum.playlistmaker_1.common.util.EXTRA_KEY
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.*
@@ -40,8 +40,21 @@ class PlayerActivity : AppCompatActivity() {
             }
         }
 
+        viewModel.checkIsFavourite(track.trackId)
+
+        playerBinding.likeButton.setOnClickListener {
+            viewModel.onFavouriteClicked(track)
+        }
+
         viewModel.observeTime().observe(this) {
             playerBinding.time.text = it
+        }
+
+        viewModel.observeIsFavourite().observe(this) {
+                isFavorite ->
+            playerBinding.likeButton.setImageResource(
+                if (isFavorite) R.drawable.ic_like_button_favourite else R.drawable.like_button
+            )
         }
 
         showTrack(track)

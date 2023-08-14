@@ -13,10 +13,10 @@ import com.practicum.playlistmaker_1.databinding.FragmentSearchBinding
 import com.practicum.playlistmaker_1.player.ui.activity.PlayerActivity
 import com.practicum.playlistmaker_1.search.domain.models.NetworkError
 import com.practicum.playlistmaker_1.search.domain.models.Track
-import com.practicum.playlistmaker_1.search.ui.TrackAdapter
+import com.practicum.playlistmaker_1.common.adapter.TrackAdapter
 import com.practicum.playlistmaker_1.search.ui.models.SearchState
 import com.practicum.playlistmaker_1.search.ui.view_model.SearchViewModel
-import com.practicum.playlistmaker_1.util.EXTRA_KEY
+import com.practicum.playlistmaker_1.common.util.EXTRA_KEY
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
@@ -125,7 +125,7 @@ class SearchFragment : Fragment() {
 
     private fun showHistoryList(tracks: List<Track>) {
         clearContent()
-        historyAdapter.tracks = tracks as ArrayList<Track>
+        historyAdapter.tracks.addAll(tracks)
         if (tracks.isNotEmpty()) {
             searchBinding.searchHistoryLayout.visibility = View.VISIBLE
         }

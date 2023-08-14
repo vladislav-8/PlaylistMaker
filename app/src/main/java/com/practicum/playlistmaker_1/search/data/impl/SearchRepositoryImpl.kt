@@ -6,7 +6,7 @@ import com.practicum.playlistmaker_1.search.data.network.TrackSearchResponse
 import com.practicum.playlistmaker_1.search.data.network.TrackSearchRequest
 import com.practicum.playlistmaker_1.search.data.storage.SearchHistoryStorage
 import com.practicum.playlistmaker_1.search.domain.models.Track
-import com.practicum.playlistmaker_1.util.Resource
+import com.practicum.playlistmaker_1.common.util.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -37,7 +37,7 @@ class SearchRepositoryImpl(
                             it.releaseDate,
                             it.primaryGenreName,
                             it.country,
-                            it.previewUrl
+                            it.previewUrl,
                         )
                     }
                     emit(Resource.Success(data))

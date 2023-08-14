@@ -8,8 +8,8 @@ import com.practicum.playlistmaker_1.search.domain.api.SearchInteractor
 import com.practicum.playlistmaker_1.search.domain.models.NetworkError
 import com.practicum.playlistmaker_1.search.domain.models.Track
 import com.practicum.playlistmaker_1.search.ui.models.SearchState
-import com.practicum.playlistmaker_1.util.CLICK_DEBOUNCE_DELAY_MILLIS
-import com.practicum.playlistmaker_1.util.maxHistorySize
+import com.practicum.playlistmaker_1.common.util.CLICK_DEBOUNCE_DELAY_MILLIS
+import com.practicum.playlistmaker_1.common.util.maxHistorySize
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
