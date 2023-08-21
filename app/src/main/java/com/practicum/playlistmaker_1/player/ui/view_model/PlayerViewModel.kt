@@ -4,24 +4,32 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.practicum.playlistmaker_1.media_library.domain.api.FavouriteTracksInteractor
 import com.practicum.playlistmaker_1.player.domain.api.PlayerInteractor
 import com.practicum.playlistmaker_1.player.domain.models.PlayerState
-import com.practicum.playlistmaker_1.util.DELAY_TIME_MILLIS
-import com.practicum.playlistmaker_1.util.formatAsTime
+import com.practicum.playlistmaker_1.search.domain.models.Track
+import com.practicum.playlistmaker_1.common.util.formatAsTime
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
-class PlayerViewModel(val playerInteractor: PlayerInteractor) : ViewModel() {
+class PlayerViewModel(
+    private val playerInteractor: PlayerInteractor,
+    private val favouriteTracksInteractor: FavouriteTracksInteractor
+) : ViewModel() {
 
     private var timerJob: Job? = null
+    private var isFavourite = false
 
     private val stateLiveData = MutableLiveData<PlayerState>()
     fun observeState(): LiveData<PlayerState> = stateLiveData
 
     private val timeLiveData = MutableLiveData<String>()
     fun observeTime(): LiveData<String> = timeLiveData
+
+    private val isFavouriteLiveData = MutableLiveData<Boolean>()
+    fun observeIsFavourite(): LiveData<Boolean> = isFavouriteLiveData
 
     init {
         playerInteractor.setOnStateChangeListener { state ->
@@ -30,9 +38,9 @@ class PlayerViewModel(val playerInteractor: PlayerInteractor) : ViewModel() {
         }
     }
 
-    private fun startTimer () {
+    private fun startTimer() {
         timerJob = viewModelScope.launch {
-            while(isActive) {
+            while (isActive) {
                 delay(DELAY_TIME_MILLIS)
                 timeLiveData.postValue(playerInteractor.getPosition().formatAsTime())
             }
@@ -57,5 +65,34 @@ class PlayerViewModel(val playerInteractor: PlayerInteractor) : ViewModel() {
     fun reset() {
         playerInteractor.reset()
         timerJob?.cancel()
+    }
+
+    fun checkIsFavourite(trackId: Int) {
+        viewModelScope.launch {
+            favouriteTracksInteractor
+                .isFavoriteTrack(trackId)
+                .collect { isFavorite ->
+                    isFavourite = isFavorite
+                    isFavouriteLiveData.postValue(isFavourite)
+                }
+        }
+    }
+
+    fun onFavouriteClicked(track: Track) {
+        viewModelScope.launch {
+            isFavourite = if (isFavourite) {
+                favouriteTracksInteractor.deleteFromFavorites(track.trackId)
+                isFavouriteLiveData.postValue(false)
+                false
+            } else {
+                favouriteTracksInteractor.addToFavorites(track)
+                isFavouriteLiveData.postValue(true)
+                true
+            }
+        }
+    }
+
+    companion object {
+        const val DELAY_TIME_MILLIS = 300L
     }
 }

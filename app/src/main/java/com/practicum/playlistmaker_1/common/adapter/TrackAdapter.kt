@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker_1.search.ui
+package com.practicum.playlistmaker_1.common.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -27,7 +27,7 @@ class TrackAdapter(private val clickListener: TrackClickListener) :
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         holder.bind(tracks[position])
-        holder.itemView.setOnClickListener { clickListener.onTrackClick(tracks[position]) }
+        holder.itemView.setOnClickListener { clickListener.onTrackClick(tracks[holder.adapterPosition]) }
     }
 
     fun interface TrackClickListener {
