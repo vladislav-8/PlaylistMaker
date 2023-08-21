@@ -8,7 +8,6 @@ import com.practicum.playlistmaker_1.media_library.domain.api.FavouriteTracksInt
 import com.practicum.playlistmaker_1.player.domain.api.PlayerInteractor
 import com.practicum.playlistmaker_1.player.domain.models.PlayerState
 import com.practicum.playlistmaker_1.search.domain.models.Track
-import com.practicum.playlistmaker_1.common.util.DELAY_TIME_MILLIS
 import com.practicum.playlistmaker_1.common.util.formatAsTime
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -91,5 +90,9 @@ class PlayerViewModel(
                 true
             }
         }
+    }
+
+    companion object {
+        const val DELAY_TIME_MILLIS = 300L
     }
 }
