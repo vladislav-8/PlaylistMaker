@@ -5,7 +5,7 @@
     tools:context=".media_library.ui.activity.MediaLibraryFragment">
 
     <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/settings_toolbar"
+        android:id="@+id/new_playlist_toolbar"
         style="@style/ToolbarColor"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize">
