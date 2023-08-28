@@ -1,11 +1,11 @@
-package com.practicum.playlistmaker_1.common.adapter
+package com.practicum.playlistmaker_1.common.adapters.playlist_adapter
 
 import androidx.recyclerview.widget.DiffUtil
-import com.practicum.playlistmaker_1.search.domain.models.Track
+import com.practicum.playlistmaker_1.media_library.domain.models.PlaylistModel
 
-class TracksDiffCallback(
-    private val oldList: List<Track>,
-    private val newList: List<Track>
+class PlaylistsDiffCallback(
+    private val oldList: List<PlaylistModel>,
+    private val newList: List<PlaylistModel>
 ) : DiffUtil.Callback() {
 
     override fun getOldListSize() = oldList.size
@@ -14,7 +14,7 @@ class TracksDiffCallback(
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         val oldTrack = oldList[oldItemPosition]
         val newTrack = newList[oldItemPosition]
-        return oldTrack.trackId == newTrack.trackId
+        return oldTrack.id == newTrack.id
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {

@@ -13,7 +13,7 @@ import com.practicum.playlistmaker_1.databinding.FragmentSearchBinding
 import com.practicum.playlistmaker_1.player.ui.activity.PlayerActivity
 import com.practicum.playlistmaker_1.search.domain.models.NetworkError
 import com.practicum.playlistmaker_1.search.domain.models.Track
-import com.practicum.playlistmaker_1.common.adapter.TrackAdapter
+import com.practicum.playlistmaker_1.common.adapters.tracks_adapter.TrackAdapter
 import com.practicum.playlistmaker_1.search.ui.models.SearchState
 import com.practicum.playlistmaker_1.search.ui.view_model.SearchViewModel
 import com.practicum.playlistmaker_1.common.util.EXTRA_KEY
@@ -21,7 +21,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
 
-    private lateinit var searchBinding: FragmentSearchBinding
+    private var _searchBinding: FragmentSearchBinding? = null
+    private val searchBinding get() = _searchBinding!!
     private val viewModel by viewModel<SearchViewModel>()
 
     private var searchInputQuery = ""
@@ -34,7 +35,7 @@ class SearchFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        searchBinding = FragmentSearchBinding.inflate(inflater, container, false)
+        _searchBinding = FragmentSearchBinding.inflate(inflater, container, false)
         return searchBinding.root
     }
 

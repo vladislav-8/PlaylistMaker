@@ -7,7 +7,7 @@ import com.practicum.playlistmaker_1.db.entity.PlaylistEntity.Companion.TABLE_NA
 
 @Entity(tableName = TABLE_NAME)
 class PlaylistEntity(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val id: Int,
     val title: String,
     val description: String,

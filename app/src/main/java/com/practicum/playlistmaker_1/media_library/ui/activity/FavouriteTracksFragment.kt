@@ -11,13 +11,14 @@ import com.practicum.playlistmaker_1.media_library.ui.models.FavouriteTracksStat
 import com.practicum.playlistmaker_1.media_library.ui.viewmodel.FavouriteTracksViewModel
 import com.practicum.playlistmaker_1.player.ui.activity.PlayerActivity
 import com.practicum.playlistmaker_1.search.domain.models.Track
-import com.practicum.playlistmaker_1.common.adapter.TrackAdapter
+import com.practicum.playlistmaker_1.common.adapters.tracks_adapter.TrackAdapter
 import com.practicum.playlistmaker_1.common.util.EXTRA_KEY
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavouriteTracksFragment : Fragment() {
 
-    private lateinit var binding: FragmentFavouriteTracksBinding
+    private var _binding: FragmentFavouriteTracksBinding? = null
+    private val binding get() = _binding!!
     private val viewModel by viewModel<FavouriteTracksViewModel>()
 
     private val favoritesTracksAdapter = TrackAdapter {
@@ -27,7 +28,7 @@ class FavouriteTracksFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        binding = FragmentFavouriteTracksBinding.inflate(inflater, container, false)
+        _binding = FragmentFavouriteTracksBinding.inflate(inflater, container, false)
         return binding.root
     }
 

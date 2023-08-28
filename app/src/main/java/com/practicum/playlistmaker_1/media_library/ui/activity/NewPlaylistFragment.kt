@@ -8,6 +8,7 @@ import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -27,22 +28,52 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileOutputStream
 
-
 class NewPlaylistFragment : Fragment() {
 
-    private lateinit var binding: FragmentNewPlaylistBinding
+    private var _binding: FragmentNewPlaylistBinding? = null
+    private val binding get() = _binding!!
+
     private var imageUri: Uri? = null
+
     private val viewModel by viewModel<NewPlaylistViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        binding = FragmentNewPlaylistBinding.inflate(inflater, container, false)
+        _binding = FragmentNewPlaylistBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        initPickMediaRegister()
+        initListeners()
+    }
+
+    private fun initListeners() {
+
+        binding.buttonCreatePlaylist.setOnClickListener {
+            val playlist = PlaylistModel(
+                title = binding.editTextPlaylistTitle.text.toString(),
+                description = binding.editTextPlaylistDescription.text.toString(),
+                imageUri = imageUri,
+                trackList = "",
+                size = 0
+            )
+
+            viewModel.savePlaylist(playlist)
+
+            imageUri?.let { saveImageToPrivateStorage(uri = it) }
+
+            Toast.makeText(
+                requireContext(),
+                String.format(getString(R.string.playlist_created), playlist.title),
+                Toast.LENGTH_SHORT
+            ).show()
+
+            findNavController().popBackStack()
+        }
 
         binding.newPlaylistToolbar.setOnClickListener {
             if (binding.editTextPlaylistTitle.text.toString().isNotEmpty() ||
@@ -51,11 +82,11 @@ class NewPlaylistFragment : Fragment() {
             )
                 context?.let { context ->
                     MaterialAlertDialogBuilder(context)
-                        .setTitle("Завершить создание плейлиста?")
-                        .setMessage("Все несохраненные данные будут потеряны")
-                        .setNeutralButton("Отмена") { dialog, which ->
+                        .setTitle(R.string.stop_creating_playlist)
+                        .setMessage(R.string.unsaved_data_will_be_lost)
+                        .setNeutralButton(R.string.cancel) { dialog, which ->
                         }
-                        .setPositiveButton("Завершить") { dialog, which ->
+                        .setPositiveButton(R.string.finish) { dialog, which ->
                             findNavController().popBackStack()
                         }
                         .show()
@@ -84,7 +115,7 @@ class NewPlaylistFragment : Fragment() {
                     context?.let {
                         ContextCompat.getColor(
                             it,
-                            R.color.icon_color
+                            R.color.main_grey_color
                         )
                     }?.let {
                         binding.buttonCreatePlaylist.setBackgroundColor(
@@ -94,50 +125,27 @@ class NewPlaylistFragment : Fragment() {
                 }
             }
         }
+    }
 
+    private fun initPickMediaRegister() {
         val pickMedia =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-                //обрабатываем событие выбора пользователем фотографии
                 if (uri != null) {
                     binding.pickImage.setImageURI(uri)
+
                     context?.let {
                         Glide.with(it)
                             .load(uri)
-                            .transform(
-                                RoundedCorners(
-                                    binding.pickImage.resources.getDimensionPixelSize(
-                                        R.dimen.corner_radius_8
-                                    )
-                                )
-                            )
+                            .circleCrop()
+                            .transform(RoundedCorners(binding.pickImage.resources.getDimensionPixelSize(R.dimen.corner_radius_8)))
                             .into(binding.pickImage)
                     }
-                    saveImageToPrivateStorage(uri)
+                    imageUri = uri
                 }
             }
 
-        //по нажатию на кнопку pickImage запускаем photo picker
         binding.pickImage.setOnClickListener {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-        }
-
-        binding.buttonCreatePlaylist.setOnClickListener {
-            val playlist = PlaylistModel(
-                title = binding.editTextPlaylistTitle.text.toString(),
-                description = binding.editTextPlaylistDescription.text.toString(),
-                imageUri = imageUri,
-                trackList = "",
-                size = 0
-            )
-
-            Toast.makeText(
-                requireContext(),
-                "Плейлист ${playlist.title} создан",
-                Toast.LENGTH_SHORT
-            ).show()
-
-            viewModel.savePlaylist(playlist)
-            findNavController().popBackStack()
         }
     }
 
@@ -149,7 +157,7 @@ class NewPlaylistFragment : Fragment() {
         if (!filePath.exists()) {
             filePath.mkdirs()
         }
-        val file = File(filePath, uri.lastPathSegment ?: "image")
+        val file = File(filePath, "imageName")
         val inputStream = requireActivity().contentResolver.openInputStream(uri)
         val outputStream = FileOutputStream(file)
 

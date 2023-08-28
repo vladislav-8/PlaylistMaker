@@ -188,7 +188,7 @@
     </style>
 
     <style name="PlaylistEditText" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <item name="android:textColor">@color/icon_color</item>
+        <item name="android:textColor">@color/main_grey_color</item>
         <item name="android:textColorHint">@color/white</item>
         <item name="boxCornerRadiusBottomEnd">4dp</item>
         <item name="boxCornerRadiusBottomStart">4dp</item>
