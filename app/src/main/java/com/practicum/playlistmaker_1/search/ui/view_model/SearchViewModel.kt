@@ -8,7 +8,6 @@ import com.practicum.playlistmaker_1.search.domain.api.SearchInteractor
 import com.practicum.playlistmaker_1.search.domain.models.NetworkError
 import com.practicum.playlistmaker_1.search.domain.models.Track
 import com.practicum.playlistmaker_1.search.ui.models.SearchState
-import com.practicum.playlistmaker_1.common.util.CLICK_DEBOUNCE_DELAY_MILLIS
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -16,8 +15,7 @@ import kotlinx.coroutines.launch
 class SearchViewModel(
     private val searchInteractor: SearchInteractor,
 ) : ViewModel() {
-
-    private var isClickAllowed = true
+    
     private var searchJob: Job? = null
 
     private val historyList = ArrayList<Track>()
@@ -104,18 +102,9 @@ class SearchViewModel(
         }
     }
 
-    fun clickDebounce(): Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            viewModelScope.launch {
-                delay(CLICK_DEBOUNCE_DELAY_MILLIS)
-                isClickAllowed = true
-            }
-        }
-        return current
-    }
-
     companion object {
         const val maxHistorySize = 10
+        const val CLICK_DEBOUNCE_DELAY_MILLIS = 2000L
     }
+
 }

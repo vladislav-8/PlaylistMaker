@@ -10,7 +10,6 @@ import com.practicum.playlistmaker_1.R
 import com.practicum.playlistmaker_1.databinding.FragmentMediaLibraryBinding
 import com.practicum.playlistmaker_1.media_library.ui.MediaLibraryViewPagerAdapter
 
-
 class MediaLibraryFragment : Fragment() {
 
     private var _binding: FragmentMediaLibraryBinding? = null

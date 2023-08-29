@@ -22,11 +22,10 @@ class MainActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
 
         mainBinding.bottomNavigationView.setupWithNavController(navController)
-
-
+        
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.playerActivity, R.id.newPlaylistFragment -> {
+                R.id.playerFragment, R.id.newPlaylistFragment -> {
                     mainBinding.bottomNavigationView.visibility = View.GONE
                 }
                 else -> {

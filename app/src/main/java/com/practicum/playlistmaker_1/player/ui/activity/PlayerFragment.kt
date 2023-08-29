@@ -1,36 +1,47 @@
 package com.practicum.playlistmaker_1.player.ui.activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.core.os.bundleOf
+import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker_1.R
-import com.practicum.playlistmaker_1.databinding.ActivityPlayerBinding
+import com.practicum.playlistmaker_1.databinding.FragmentPlayerBinding
 import com.practicum.playlistmaker_1.player.domain.models.PlayerState
 import com.practicum.playlistmaker_1.player.ui.view_model.PlayerViewModel
 import com.practicum.playlistmaker_1.search.domain.models.Track
-import com.practicum.playlistmaker_1.common.util.EXTRA_KEY
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
-class PlayerActivity : AppCompatActivity() {
+class PlayerFragment : Fragment() {
 
-    private lateinit var playerBinding: ActivityPlayerBinding
+    private var _playerBinding: FragmentPlayerBinding? = null
+    private val playerBinding get() = _playerBinding!!
     private val viewModel by viewModel<PlayerViewModel>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        playerBinding = ActivityPlayerBinding.inflate(layoutInflater)
-        setContentView(playerBinding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _playerBinding = FragmentPlayerBinding.inflate(inflater, container, false)
+        return playerBinding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         initListeners()
 
-        val track = intent.getSerializableExtra(EXTRA_KEY) as Track
+        val track = requireArguments().getSerializable(EXTRA_KEY) as Track
+
         track.previewUrl?.let { viewModel.prepare(it) }
 
-        viewModel.observeState().observe(this) { state ->
+        viewModel.observeState().observe(viewLifecycleOwner) { state ->
             playerBinding.playButton.setOnClickListener {
                 controller(state)
             }
@@ -46,18 +57,24 @@ class PlayerActivity : AppCompatActivity() {
             viewModel.onFavouriteClicked(track)
         }
 
-        viewModel.observeTime().observe(this) {
+        viewModel.observeTime().observe(viewLifecycleOwner) {
             playerBinding.time.text = it
         }
 
-        viewModel.observeIsFavourite().observe(this) {
-                isFavorite ->
+        viewModel.observeIsFavourite().observe(viewLifecycleOwner) { isFavorite ->
             playerBinding.likeButton.setImageResource(
                 if (isFavorite) R.drawable.ic_like_button_favourite else R.drawable.like_button
             )
         }
 
         showTrack(track)
+    }
+
+    private fun initListeners() {
+        playerBinding.toolbarInclude.toolbar.apply {
+            title = ""
+            findNavController().popBackStack()
+        }
     }
 
     private fun showTrack(track: Track) {
@@ -113,17 +130,6 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
-    private fun initListeners() {
-        playerBinding.toolbarInclude.toolbar.apply {
-            title = ""
-            setSupportActionBar(this)
-            setNavigationOnClickListener {
-                finish()
-            }
-        }
-
-    }
-
     private fun setPlayIcon() {
         playerBinding.playButton.setImageResource(R.drawable.ic_play)
     }
@@ -140,5 +146,13 @@ class PlayerActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         viewModel.pause()
+    }
+
+    companion object {
+        const val EXTRA_KEY = "TRACK_KEY"
+
+        fun createArgs(track: Track): Bundle {
+            return bundleOf(EXTRA_KEY to track)
+        }
     }
 }

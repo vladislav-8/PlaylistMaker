@@ -1,18 +1,19 @@
 package com.practicum.playlistmaker_1.media_library.ui.activity
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
+import androidx.navigation.fragment.findNavController
+import com.practicum.playlistmaker_1.R
 import com.practicum.playlistmaker_1.databinding.FragmentFavouriteTracksBinding
 import com.practicum.playlistmaker_1.media_library.ui.models.FavouriteTracksState
 import com.practicum.playlistmaker_1.media_library.ui.viewmodel.FavouriteTracksViewModel
-import com.practicum.playlistmaker_1.player.ui.activity.PlayerActivity
 import com.practicum.playlistmaker_1.search.domain.models.Track
 import com.practicum.playlistmaker_1.common.adapters.tracks_adapter.TrackAdapter
-import com.practicum.playlistmaker_1.common.util.EXTRA_KEY
+import com.practicum.playlistmaker_1.player.ui.activity.PlayerFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavouriteTracksFragment : Fragment() {
@@ -61,12 +62,10 @@ class FavouriteTracksFragment : Fragment() {
     }
 
     private fun showPlayer(track: Track) {
-        if (viewModel.clickDebounce()) {
-            val intent = Intent(requireContext(), PlayerActivity::class.java).apply {
-                putExtra(EXTRA_KEY, track)
-            }
-            startActivity(intent)
-        }
+        findNavController().navigate(
+            R.id.action_mediaLibraryFragment_to_playerFragment,
+            bundleOf(PlayerFragment.EXTRA_KEY to track)
+        )
     }
 
     override fun onResume() {

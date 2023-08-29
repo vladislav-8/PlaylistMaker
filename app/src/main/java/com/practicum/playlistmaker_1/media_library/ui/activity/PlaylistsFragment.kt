@@ -70,7 +70,6 @@ class PlaylistsFragment : Fragment() {
         playlistsAdapter.playlists.addAll(playlists)
         binding.playlistsGrid.visibility = View.VISIBLE
         binding.nothingFound.visibility = View.GONE
-        playlistsAdapter.notifyDataSetChanged()
     }
 
     override fun onResume() {
