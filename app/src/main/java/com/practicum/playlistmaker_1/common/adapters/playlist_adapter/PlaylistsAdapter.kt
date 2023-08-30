@@ -26,10 +26,9 @@ class PlaylistsAdapter :
 
     override fun onBindViewHolder(holder: PlaylistsViewHolder, position: Int) {
         holder.bind(playlists[position])
-        holder.adapterPosition
     }
 
     fun clearPlaylists() {
-        playlists = ArrayList()
+        playlists = arrayListOf()
     }
 }

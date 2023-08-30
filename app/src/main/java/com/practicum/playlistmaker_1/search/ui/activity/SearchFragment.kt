@@ -1,7 +1,6 @@
 package com.practicum.playlistmaker_1.search.ui.activity
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -15,7 +14,6 @@ import com.practicum.playlistmaker_1.databinding.FragmentSearchBinding
 import com.practicum.playlistmaker_1.search.domain.models.NetworkError
 import com.practicum.playlistmaker_1.search.domain.models.Track
 import com.practicum.playlistmaker_1.common.adapters.tracks_adapter.TrackAdapter
-import com.practicum.playlistmaker_1.common.util.EXTRA_KEY
 import com.practicum.playlistmaker_1.player.ui.activity.PlayerFragment
 import com.practicum.playlistmaker_1.search.ui.models.SearchState
 import com.practicum.playlistmaker_1.search.ui.view_model.SearchViewModel
