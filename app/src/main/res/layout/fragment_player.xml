@@ -194,6 +194,5 @@
             app:layout_constraintEnd_toStartOf="@+id/rightBorder"
             app:layout_constraintStart_toStartOf="@+id/leftBorder"
             app:layout_constraintTop_toBottomOf="@+id/playButton" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

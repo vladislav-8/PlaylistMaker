@@ -15,7 +15,8 @@ import kotlinx.coroutines.launch
 class SearchViewModel(
     private val searchInteractor: SearchInteractor,
 ) : ViewModel() {
-    
+
+    private var isClickAllowed = true
     private var searchJob: Job? = null
 
     private val historyList = ArrayList<Track>()
@@ -100,6 +101,17 @@ class SearchViewModel(
             delay(CLICK_DEBOUNCE_DELAY_MILLIS)
             searchTracks(changedText)
         }
+    }
+
+    fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            viewModelScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY_MILLIS)
+                isClickAllowed = true
+            }
+        }
+        return current
     }
 
     companion object {

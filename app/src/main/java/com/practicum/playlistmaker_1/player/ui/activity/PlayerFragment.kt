@@ -6,10 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker_1.R
+import com.practicum.playlistmaker_1.common.util.EXTRA_KEY
 import com.practicum.playlistmaker_1.databinding.FragmentPlayerBinding
 import com.practicum.playlistmaker_1.player.domain.models.PlayerState
 import com.practicum.playlistmaker_1.player.ui.view_model.PlayerViewModel
@@ -72,8 +73,12 @@ class PlayerFragment : Fragment() {
 
     private fun initListeners() {
         playerBinding.toolbarInclude.toolbar.apply {
-            title = ""
-            findNavController().popBackStack()
+            setOnClickListener {
+                findNavController().popBackStack()
+            }
+        }
+        playerBinding.addButton.setOnClickListener {
+            findNavController().navigate(R.id.action_playerFragment_to_newPlaylistFragment)
         }
     }
 
@@ -86,15 +91,12 @@ class PlayerFragment : Fragment() {
                 .centerCrop()
                 .transform(RoundedCorners(resources.getDimensionPixelSize(R.dimen.corner_radius_8)))
                 .into(mediaTrackImage)
-
             trackName.text = track.trackName
             artistName.text = track.artistName
             primaryGenreName.text = track.primaryGenreName
             country.text = track.country
-
             trackTime.text =
                 SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
-
             val date =
                 track.releaseDate?.let {
                     SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(
@@ -106,7 +108,6 @@ class PlayerFragment : Fragment() {
                     SimpleDateFormat("yyyy", Locale.getDefault()).format(date)
                 releaseDate.text = formattedDatesString
             }
-
             if (track.collectionName.isNotEmpty()) {
                 collectionName.text = track.collectionName
             } else {
@@ -138,8 +139,8 @@ class PlayerFragment : Fragment() {
         playerBinding.playButton.setImageResource(R.drawable.ic_pause)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         viewModel.reset()
     }
 
@@ -149,8 +150,6 @@ class PlayerFragment : Fragment() {
     }
 
     companion object {
-        const val EXTRA_KEY = "TRACK_KEY"
-
         fun createArgs(track: Track): Bundle {
             return bundleOf(EXTRA_KEY to track)
         }

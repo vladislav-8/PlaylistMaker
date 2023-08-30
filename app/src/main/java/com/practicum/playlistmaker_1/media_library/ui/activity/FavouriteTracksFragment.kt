@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import com.practicum.playlistmaker_1.R
 import com.practicum.playlistmaker_1.databinding.FragmentFavouriteTracksBinding
@@ -23,7 +22,7 @@ class FavouriteTracksFragment : Fragment() {
     private val viewModel by viewModel<FavouriteTracksViewModel>()
 
     private val favoritesTracksAdapter = TrackAdapter {
-        showPlayer(it)
+        showPlayer(track = it)
     }
 
     override fun onCreateView(
@@ -62,10 +61,12 @@ class FavouriteTracksFragment : Fragment() {
     }
 
     private fun showPlayer(track: Track) {
-        findNavController().navigate(
-            R.id.action_mediaLibraryFragment_to_playerFragment,
-            bundleOf(PlayerFragment.EXTRA_KEY to track)
-        )
+        if (viewModel.clickDebounce()) {
+            findNavController().navigate(
+                R.id.action_mediaLibraryFragment_to_playerFragment,
+                PlayerFragment.createArgs(track)
+            )
+        }
     }
 
     override fun onResume() {
