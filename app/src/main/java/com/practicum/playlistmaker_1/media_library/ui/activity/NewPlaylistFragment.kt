@@ -2,6 +2,7 @@ package com.practicum.playlistmaker_1.media_library.ui.activity
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.media.Image
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -131,15 +132,8 @@ class NewPlaylistFragment : Fragment() {
         val pickMedia =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                 if (uri != null) {
+                    binding.pickImage.scaleType = ImageView.ScaleType.CENTER_CROP
                     binding.pickImage.setImageURI(uri)
-
-                    context?.let {
-                        Glide.with(it)
-                            .load(uri)
-                            .circleCrop()
-                            .transform(RoundedCorners(binding.pickImage.resources.getDimensionPixelSize(R.dimen.corner_radius_8)))
-                            .into(binding.pickImage)
-                    }
                     imageUri = uri
                 }
             }

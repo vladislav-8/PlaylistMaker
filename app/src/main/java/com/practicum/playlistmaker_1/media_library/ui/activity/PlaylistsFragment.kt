@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.practicum.playlistmaker_1.R
+import com.practicum.playlistmaker_1.common.adapters.ViewObjects
 import com.practicum.playlistmaker_1.common.adapters.playlist_adapter.PlaylistsAdapter
 import com.practicum.playlistmaker_1.databinding.FragmentPlaylistsBinding
 import com.practicum.playlistmaker_1.media_library.domain.models.PlaylistModel
@@ -21,7 +22,7 @@ class PlaylistsFragment : Fragment() {
     private var _binding: FragmentPlaylistsBinding? = null
     private val binding get() = _binding!!
     private val viewModel by viewModel<PlaylistViewModel>()
-    private val playlistsAdapter = PlaylistsAdapter()
+    private val playlistsAdapter = PlaylistsAdapter(viewObject = ViewObjects.Horizontal)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

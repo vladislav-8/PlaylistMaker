@@ -9,6 +9,8 @@ import com.practicum.playlistmaker_1.player.domain.api.PlayerInteractor
 import com.practicum.playlistmaker_1.player.domain.models.PlayerState
 import com.practicum.playlistmaker_1.search.domain.models.Track
 import com.practicum.playlistmaker_1.common.util.formatAsTime
+import com.practicum.playlistmaker_1.media_library.domain.api.PlaylistInteractor
+import com.practicum.playlistmaker_1.media_library.ui.models.PlaylistsScreenState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -16,7 +18,8 @@ import kotlinx.coroutines.launch
 
 class PlayerViewModel(
     private val playerInteractor: PlayerInteractor,
-    private val favouriteTracksInteractor: FavouriteTracksInteractor
+    private val favouriteTracksInteractor: FavouriteTracksInteractor,
+    private val playlistInteractor: PlaylistInteractor
 ) : ViewModel() {
 
     private var timerJob: Job? = null
@@ -31,11 +34,15 @@ class PlayerViewModel(
     private val isFavouriteLiveData = MutableLiveData<Boolean>()
     fun observeIsFavourite(): LiveData<Boolean> = isFavouriteLiveData
 
+    private val playlistLiveData = MutableLiveData<PlaylistsScreenState>()
+    fun observePlaylists(): LiveData<PlaylistsScreenState> = playlistLiveData
+
     init {
         playerInteractor.setOnStateChangeListener { state ->
             stateLiveData.postValue(state)
             if (state == PlayerState.STATE_COMPLETE) timerJob?.cancel()
         }
+        playlistLiveData.postValue(PlaylistsScreenState.Empty)
     }
 
     private fun startTimer() {
@@ -88,6 +95,18 @@ class PlayerViewModel(
                 favouriteTracksInteractor.addToFavorites(track)
                 isFavouriteLiveData.postValue(true)
                 true
+            }
+        }
+    }
+
+    fun getPlaylists() {
+        viewModelScope.launch {
+            playlistInteractor.getPlaylists().collect {
+                if (it.isEmpty()) {
+                    playlistLiveData.postValue(PlaylistsScreenState.Empty)
+                } else {
+                    playlistLiveData.postValue(PlaylistsScreenState.Filled(it))
+                }
             }
         }
     }

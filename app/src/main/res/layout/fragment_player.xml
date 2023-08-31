@@ -250,6 +250,8 @@
             android:id="@+id/playlists_bottom_sheet_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/marginTop_24" />
+            android:layout_marginTop="@dimen/marginTop_24"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/bottom_sheet_playlists_item"/>
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

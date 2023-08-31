@@ -11,8 +11,12 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.practicum.playlistmaker_1.R
+import com.practicum.playlistmaker_1.common.adapters.ViewObjects
+import com.practicum.playlistmaker_1.common.adapters.playlist_adapter.PlaylistsAdapter
 import com.practicum.playlistmaker_1.common.util.EXTRA_KEY
 import com.practicum.playlistmaker_1.databinding.FragmentPlayerBinding
+import com.practicum.playlistmaker_1.media_library.domain.models.PlaylistModel
+import com.practicum.playlistmaker_1.media_library.ui.models.PlaylistsScreenState
 import com.practicum.playlistmaker_1.player.domain.models.PlayerState
 import com.practicum.playlistmaker_1.player.ui.view_model.PlayerViewModel
 import com.practicum.playlistmaker_1.search.domain.models.Track
@@ -24,7 +28,10 @@ class PlayerFragment : Fragment() {
 
     private var _playerBinding: FragmentPlayerBinding? = null
     private val playerBinding get() = _playerBinding!!
+
     private val viewModel by viewModel<PlayerViewModel>()
+
+    private val bottomSheetPlaylistsAdapter = PlaylistsAdapter(viewObject = ViewObjects.Vertical)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -76,6 +83,10 @@ class PlayerFragment : Fragment() {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
+        viewModel.getPlaylists()
+        playerBinding.playlistsBottomSheetRecyclerview.adapter = bottomSheetPlaylistsAdapter
+        render()
+
         showTrack(track)
     }
 
@@ -108,6 +119,26 @@ class PlayerFragment : Fragment() {
                 setPlayIcon()
             }
         }
+    }
+
+    private fun render() {
+        viewModel.observePlaylists().observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is PlaylistsScreenState.Filled -> {
+                    showPlaylists(state.playlists)
+                }
+
+                is PlaylistsScreenState.Empty -> {
+                    playerBinding.playlistsBottomSheetRecyclerview.visibility = View.GONE
+                }
+            }
+        }
+    }
+
+    private fun showPlaylists(playlists: List<PlaylistModel>) {
+        bottomSheetPlaylistsAdapter.clearPlaylists()
+        bottomSheetPlaylistsAdapter.playlists.addAll(playlists)
+        playerBinding.playlistsBottomSheetRecyclerview.visibility = View.VISIBLE
     }
 
     private fun showTrack(track: Track) {
@@ -175,6 +206,11 @@ class PlayerFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         viewModel.pause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.getPlaylists()
     }
 
     companion object {
