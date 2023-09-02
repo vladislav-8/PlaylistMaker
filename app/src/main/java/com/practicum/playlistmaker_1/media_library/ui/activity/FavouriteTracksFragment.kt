@@ -77,4 +77,9 @@ class FavouriteTracksFragment : Fragment() {
     companion object {
         fun newInstance() = FavouriteTracksFragment().apply {}
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }

@@ -171,4 +171,9 @@ class SearchFragment : Fragment() {
         searchBinding.searchRecycler.visibility = View.GONE
         searchBinding.progressBar.visibility = View.GONE
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _searchBinding = null
+    }
 }

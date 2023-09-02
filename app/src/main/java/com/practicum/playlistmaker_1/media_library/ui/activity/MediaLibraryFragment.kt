@@ -34,7 +34,7 @@ class MediaLibraryFragment : Fragment() {
         )
 
         tabMediator = TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            when(position) {
+            when (position) {
                 0 -> tab.text = getString(R.string.favourite_tracks)
                 1 -> tab.text = getString(R.string.playlists)
             }
@@ -45,5 +45,6 @@ class MediaLibraryFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         tabMediator.detach()
+        _binding = null
     }
 }
