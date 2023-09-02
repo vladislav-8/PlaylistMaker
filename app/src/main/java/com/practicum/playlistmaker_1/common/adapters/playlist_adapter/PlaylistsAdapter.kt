@@ -6,12 +6,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker_1.R
 import com.practicum.playlistmaker_1.common.adapters.ViewObjects
-import com.practicum.playlistmaker_1.media_library.domain.models.PlaylistModel
+import com.practicum.playlistmaker_1.media_library.domain.models.Playlist
 
 class PlaylistsAdapter(private val viewObject: ViewObjects) :
     RecyclerView.Adapter<PlaylistsViewHolder>() {
 
-    var playlists = mutableListOf<PlaylistModel>()
+    var onPlayListClicked: ((playlist: Playlist) -> Unit)? = null
+
+    var playlists = mutableListOf<Playlist>()
         set(newPlaylists) {
             val diffCallback = PlaylistsDiffCallback(field, newPlaylists)
             val diffResult = DiffUtil.calculateDiff(diffCallback)
@@ -30,10 +32,10 @@ class PlaylistsAdapter(private val viewObject: ViewObjects) :
     override fun getItemCount() = playlists.size
 
     override fun onBindViewHolder(holder: PlaylistsViewHolder, position: Int) {
-        holder.bind(playlists[position])
-    }
-
-    fun clearPlaylists() {
-        playlists = arrayListOf()
+        val playlist = playlists[position]
+        holder.bind(playlist)
+        holder.itemView.setOnClickListener {
+            onPlayListClicked?.invoke(playlist)
+        }
     }
 }

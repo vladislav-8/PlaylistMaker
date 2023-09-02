@@ -30,6 +30,7 @@
     <dimen name="marginTop_26">26dp</dimen>
     <dimen name="marginTop_30">30dp</dimen>
     <dimen name="marginTop_32">32dp</dimen>
+    <dimen name="marginTop_40">40dp</dimen>
     <dimen name="paddingTop">16dp</dimen>
     <dimen name="paddingStart">64dp</dimen>
     <dimen name="paddingBottom">40dp</dimen>

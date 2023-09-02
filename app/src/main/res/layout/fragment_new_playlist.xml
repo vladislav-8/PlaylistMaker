@@ -1,9 +1,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
+    style="@style/ScreenOuterLayoutStyle"
     tools:context="com.practicum.playlistmaker_1.media_library.ui.activity.NewPlaylistFragment">
 
     <androidx.constraintlayout.widget.Guideline
@@ -39,24 +37,29 @@
     </com.google.android.material.appbar.MaterialToolbar>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/load_image_cardview"
+        android:id="@+id/cardPlaceholder"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/marginTop_26"
         app:cardCornerRadius="@dimen/corner_radius_8"
+        android:elevation="0dp"
+        android:layout_marginHorizontal="@dimen/margin_horizontal_8"
+        android:layout_marginTop="26dp"
+        android:backgroundTint="@android:color/transparent"
         app:cardElevation="0dp"
         app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintEnd_toEndOf="@id/rightBorder"
-        app:layout_constraintStart_toStartOf="@id/leftBorder"
-        app:layout_constraintTop_toBottomOf="@id/new_playlist_toolbar">
+        app:layout_constraintEnd_toStartOf="@+id/rightBorder"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/leftBorder"
+        app:layout_constraintTop_toBottomOf="@+id/new_playlist_toolbar">
 
         <ImageView
             android:id="@+id/pickImage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:cropToPadding="true"
+            android:scaleType="centerCrop"
             android:src="@drawable/load_picture_placeholder"
-            android:scaleType="center"
-            android:background="@drawable/load_picture_shape"/>
+            />
     </androidx.cardview.widget.CardView>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -70,7 +73,7 @@
         android:theme="@style/ThemeOverlay.AppTheme.TextInputEditText.Outlined"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/load_image_cardview">
+        app:layout_constraintTop_toBottomOf="@+id/cardPlaceholder">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editText_playlist_title"
@@ -110,6 +113,7 @@
         android:enabled="false"
         android:text="@string/to_create"
         android:textColor="@color/white"
+        android:textSize="@dimen/textSize_16"
         app:cornerRadius="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/textInputLayout_playlist_description"

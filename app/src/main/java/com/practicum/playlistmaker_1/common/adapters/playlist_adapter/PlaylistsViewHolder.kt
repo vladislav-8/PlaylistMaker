@@ -8,7 +8,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker_1.R
-import com.practicum.playlistmaker_1.media_library.domain.models.PlaylistModel
+import com.practicum.playlistmaker_1.media_library.domain.models.Playlist
 
 class PlaylistsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -16,15 +16,16 @@ class PlaylistsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val size = itemView.findViewById<TextView>(R.id.playlist_size)
     private val image = itemView.findViewById<ImageView>(R.id.playlist_image)
 
-    fun bind(model: PlaylistModel) {
+    fun bind(model: Playlist) {
         title.text = model.title
-        size.text = pluralizeWord(model.size, "трек")
+        size.text = itemView.context.getString(R.string.track_count, pluralizeWord(model.size, "трек"))
 
         Glide.with(itemView.context)
             .load(model.imageUri)
             .transform(CenterCrop(), RoundedCorners(itemView.resources.getDimensionPixelSize(R.dimen.corner_radius_8)))
             .placeholder(R.drawable.placeholder)
             .into(image)
+
     }
 
     private fun pluralizeWord(number: Int, word: String): String {

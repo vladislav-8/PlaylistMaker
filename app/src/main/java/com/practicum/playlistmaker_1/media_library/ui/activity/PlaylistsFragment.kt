@@ -11,7 +11,7 @@ import com.practicum.playlistmaker_1.R
 import com.practicum.playlistmaker_1.common.adapters.ViewObjects
 import com.practicum.playlistmaker_1.common.adapters.playlist_adapter.PlaylistsAdapter
 import com.practicum.playlistmaker_1.databinding.FragmentPlaylistsBinding
-import com.practicum.playlistmaker_1.media_library.domain.models.PlaylistModel
+import com.practicum.playlistmaker_1.media_library.domain.models.Playlist
 import com.practicum.playlistmaker_1.media_library.ui.ItemDecorator
 import com.practicum.playlistmaker_1.media_library.ui.models.PlaylistsScreenState
 import com.practicum.playlistmaker_1.media_library.ui.viewmodel.PlaylistViewModel
@@ -22,6 +22,7 @@ class PlaylistsFragment : Fragment() {
     private var _binding: FragmentPlaylistsBinding? = null
     private val binding get() = _binding!!
     private val viewModel by viewModel<PlaylistViewModel>()
+
     private val playlistsAdapter = PlaylistsAdapter(viewObject = ViewObjects.Horizontal)
 
     override fun onCreateView(
@@ -40,7 +41,7 @@ class PlaylistsFragment : Fragment() {
             findNavController().navigate(R.id.newPlaylistFragment)
         }
 
-        viewModel.getPlaylists()
+        viewModel.fillData()
 
         binding.playlistsGrid.adapter = playlistsAdapter
 
@@ -48,11 +49,14 @@ class PlaylistsFragment : Fragment() {
         binding.playlistsGrid.setHasFixedSize(true)
         binding.playlistsGrid.addItemDecoration(ItemDecorator(40, 0))
 
-        render()
+        viewModel.stateLiveData.observe(viewLifecycleOwner) {
+            render()
+        }
+
     }
 
     private fun render() {
-        viewModel.state.observe(viewLifecycleOwner) { state ->
+        viewModel.stateLiveData.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is PlaylistsScreenState.Filled -> {
                     showPlaylists(state.playlists)
@@ -66,16 +70,15 @@ class PlaylistsFragment : Fragment() {
         }
     }
 
-    private fun showPlaylists(playlists: List<PlaylistModel>) {
-        playlistsAdapter.clearPlaylists()
-        playlistsAdapter.playlists.addAll(playlists)
+    private fun showPlaylists(playlists: List<Playlist>) {
+        playlistsAdapter.playlists = playlists as ArrayList<Playlist>
         binding.playlistsGrid.visibility = View.VISIBLE
         binding.nothingFound.visibility = View.GONE
     }
 
     override fun onResume() {
         super.onResume()
-        viewModel.getPlaylists()
+        viewModel.fillData()
     }
 
     companion object {

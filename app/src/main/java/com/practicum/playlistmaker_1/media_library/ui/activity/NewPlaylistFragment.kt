@@ -1,33 +1,25 @@
 package com.practicum.playlistmaker_1.media_library.ui.activity
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.media.Image
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.core.net.toUri
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.practicum.playlistmaker_1.R
 import com.practicum.playlistmaker_1.databinding.FragmentNewPlaylistBinding
-import com.practicum.playlistmaker_1.media_library.domain.models.PlaylistModel
+import com.practicum.playlistmaker_1.media_library.domain.models.Playlist
 import com.practicum.playlistmaker_1.media_library.ui.viewmodel.NewPlaylistViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.io.File
-import java.io.FileOutputStream
 
 class NewPlaylistFragment : Fragment() {
 
@@ -55,7 +47,7 @@ class NewPlaylistFragment : Fragment() {
     private fun initListeners() {
 
         binding.buttonCreatePlaylist.setOnClickListener {
-            val playlist = PlaylistModel(
+            val playlist = Playlist(
                 title = binding.editTextPlaylistTitle.text.toString(),
                 description = binding.editTextPlaylistDescription.text.toString(),
                 imageUri = imageUri,
@@ -65,7 +57,7 @@ class NewPlaylistFragment : Fragment() {
 
             viewModel.savePlaylist(playlist)
 
-            imageUri?.let { saveImageToPrivateStorage(uri = it) }
+            imageUri?.let { viewModel.saveToLocalStorage(uri = it) }
 
             Toast.makeText(
                 requireContext(),
@@ -81,21 +73,24 @@ class NewPlaylistFragment : Fragment() {
                 binding.editTextPlaylistDescription.text.toString()
                     .isNotEmpty() || imageUri != null
             )
-                context?.let { context ->
-                    MaterialAlertDialogBuilder(context)
-                        .setTitle(R.string.stop_creating_playlist)
-                        .setMessage(R.string.unsaved_data_will_be_lost)
-                        .setNeutralButton(R.string.cancel) { dialog, which ->
-                        }
-                        .setPositiveButton(R.string.finish) { dialog, which ->
-                            findNavController().popBackStack()
-                        }
-                        .show()
-                }
+                showConfirmDialog()
             else {
-                findNavController().popBackStack()
+                findNavController().navigateUp()
             }
         }
+
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object: OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (imageUri != null ||
+                    !binding.editTextPlaylistTitle.text.isNullOrEmpty() ||
+                    !binding.editTextPlaylistDescription.text.isNullOrEmpty()) {
+                    showConfirmDialog()
+                } else {
+                    findNavController().navigateUp()
+                }
+            }
+        })
 
         binding.editTextPlaylistTitle.doOnTextChanged { text, _, _, _ ->
             if (text != null) {
@@ -143,26 +138,17 @@ class NewPlaylistFragment : Fragment() {
         }
     }
 
-    private fun saveImageToPrivateStorage(uri: Uri) {
-        val filePath = File(
-            requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-            getString(R.string.playlists)
-        )
-        if (!filePath.exists()) {
-            filePath.mkdirs()
+    private fun showConfirmDialog() {
+        context?.let { context ->
+            MaterialAlertDialogBuilder(context)
+                .setTitle(R.string.stop_creating_playlist)
+                .setMessage(R.string.unsaved_data_will_be_lost)
+                .setNeutralButton(R.string.cancel) { dialog, which ->
+                }
+                .setPositiveButton(R.string.finish) { dialog, which ->
+                    findNavController().popBackStack()
+                }
+                .show()
         }
-        val file = File(filePath, "imageName")
-        val inputStream = requireActivity().contentResolver.openInputStream(uri)
-        val outputStream = FileOutputStream(file)
-
-        BitmapFactory
-            .decodeStream(inputStream)
-            .compress(Bitmap.CompressFormat.JPEG, QUALITY_IMAGE, outputStream)
-
-        imageUri = file.toUri()
-    }
-
-    companion object {
-        private const val QUALITY_IMAGE = 30
     }
 }

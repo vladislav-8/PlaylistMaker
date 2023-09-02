@@ -4,16 +4,15 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.practicum.playlistmaker_1.db.entity.PlaylistEntity.Companion.TABLE_NAME
 
-
 @Entity(tableName = TABLE_NAME)
-class PlaylistEntity(
+data class PlaylistEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
+    val id: Long = 0,
     val title: String,
     val description: String,
     val imageUri: String,
     val trackList: String,
-    val size: Int,
+    val size: Int
 ) {
 
     companion object {

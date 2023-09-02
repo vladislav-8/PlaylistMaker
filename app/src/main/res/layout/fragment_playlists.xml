@@ -1,9 +1,8 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.practicum.playlistmaker_1.media_library.ui.activity.PlaylistsFragment">
+    android:orientation="vertical">
 
     <Button
         android:id="@+id/newPlaylist"
@@ -16,17 +15,18 @@
     <TextView
         android:id="@+id/nothingFound"
         style="@style/placeholder_not_found"
-        android:layout_marginTop="@dimen/layout_marginTop_120"
+        android:layout_marginTop="@dimen/marginTop_40"
         android:text="@string/you_did_not_create_anyPlaylist"
+        android:visibility="gone"
         app:drawableTopCompat="@drawable/nothing_found" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/playlists_grid"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="100dp"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        tools:listitem="@layout/playlist_item" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="@dimen/padding_16"
+        android:paddingTop="@dimen/padding_16"
+        android:visibility="gone"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager" />
 
-</FrameLayout>
+</LinearLayout>

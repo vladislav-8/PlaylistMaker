@@ -1,9 +1,9 @@
-package com.practicum.playlistmaker_1.db
+package com.practicum.playlistmaker_1.db.converters
 
 import androidx.core.net.toUri
 import com.practicum.playlistmaker_1.db.entity.PlaylistEntity
 import com.practicum.playlistmaker_1.db.entity.TrackEntity
-import com.practicum.playlistmaker_1.media_library.domain.models.PlaylistModel
+import com.practicum.playlistmaker_1.media_library.domain.models.Playlist
 import com.practicum.playlistmaker_1.search.domain.models.Track
 import java.util.Calendar
 
@@ -40,25 +40,25 @@ class DbConverter {
         )
     }
 
-    fun mapFromPlaylistEntityToPlaylist(from: PlaylistEntity): PlaylistModel {
-        return PlaylistModel(
+    fun mapFromPlaylistEntityToPlaylist(from: PlaylistEntity): Playlist {
+        return Playlist(
             id = from.id,
             title = from.title,
             description = from.description,
             imageUri = from.imageUri.toUri(),
             trackList = from.trackList,
-            size = from.size,
+            size = from.size
         )
     }
 
-    fun mapFromPlaylistToPlaylistEntity(from: PlaylistModel): PlaylistEntity {
+    fun mapFromPlaylistToPlaylistEntity(from: Playlist): PlaylistEntity {
         return PlaylistEntity(
             id = from.id,
             title = from.title,
             description = from.description,
             imageUri = from.imageUri.toString(),
             trackList = from.trackList,
-            size = from.size,
+            size = from.size
         )
     }
 }

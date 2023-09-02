@@ -1,7 +1,7 @@
-package com.practicum.playlistmaker_1.media_library.data
+package com.practicum.playlistmaker_1.media_library.data.impl
 
 import com.practicum.playlistmaker_1.db.AppDatabase
-import com.practicum.playlistmaker_1.db.DbConverter
+import com.practicum.playlistmaker_1.db.converters.DbConverter
 import com.practicum.playlistmaker_1.db.entity.TrackEntity
 import com.practicum.playlistmaker_1.media_library.domain.api.FavouriteTracksRepository
 import com.practicum.playlistmaker_1.search.domain.models.Track
@@ -18,7 +18,7 @@ class FavouriteTracksRepositoryImpl(
         emit(convertFromTrackEntity(tracks))
     }
 
-    override suspend fun isFavoriteTrack(trackId: Int): Flow<Boolean> = flow {
+    override suspend fun isFavoriteTrack(trackId: Long): Flow<Boolean> = flow {
         val isFavorite = appDatabase.TrackDao().isFavoriteTrack(trackId)
         emit(isFavorite)
     }
@@ -27,7 +27,7 @@ class FavouriteTracksRepositoryImpl(
         appDatabase.TrackDao().addToFavorites(trackDbConvertor.mapFromTrackToTrackEntity(track))
     }
 
-    override suspend fun deleteFromFavorites(trackId: Int) {
+    override suspend fun deleteFromFavorites(trackId: Long) {
         appDatabase.TrackDao().deleteFromFavorites(trackId)
     }
 

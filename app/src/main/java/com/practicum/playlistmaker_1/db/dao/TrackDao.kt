@@ -13,11 +13,11 @@ interface TrackDao {
     suspend fun addToFavorites(track: TrackEntity)
 
     @Query("DELETE FROM ${TrackEntity.TABLE_NAME} WHERE trackId = :trackId")
-    suspend fun deleteFromFavorites(trackId: Int)
+    suspend fun deleteFromFavorites(trackId: Long)
 
     @Query("SELECT * FROM ${TrackEntity.TABLE_NAME} ORDER BY favouriteAddedTimestamp DESC")
     suspend fun getTracks(): List<TrackEntity>
 
     @Query("SELECT EXISTS (SELECT 1 FROM ${TrackEntity.TABLE_NAME}  WHERE trackId = :trackId)")
-    suspend fun isFavoriteTrack(trackId: Int): Boolean
+    suspend fun isFavoriteTrack(trackId: Long): Boolean
 }
