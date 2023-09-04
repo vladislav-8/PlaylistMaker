@@ -19,7 +19,7 @@ class LocalStorageImpl(val context: Context) : LocalStorage {
         if (!filePath.exists()) {
             filePath.mkdirs()
         }
-        val file = File(filePath, "imageName")
+        val file = File(filePath, IMAGE_NAME)
         val inputStream = context.contentResolver.openInputStream(uri)
         val outputStream = withContext(Dispatchers.IO) {
             FileOutputStream(file)
@@ -32,6 +32,7 @@ class LocalStorageImpl(val context: Context) : LocalStorage {
 
     companion object {
         private const val QUALITY_IMAGE = 30
-        const val DIRECTORY = "playlist"
+        private const val DIRECTORY = "playlist"
+        private const val IMAGE_NAME = "imageName"
     }
 }

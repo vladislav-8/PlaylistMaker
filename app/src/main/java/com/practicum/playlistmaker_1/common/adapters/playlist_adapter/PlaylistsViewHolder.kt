@@ -18,7 +18,7 @@ class PlaylistsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun bind(model: Playlist) {
         title.text = model.title
-        size.text = itemView.context.getString(R.string.track_count, pluralizeWord(model.size, "трек"))
+        size.text = itemView.context.getString(R.string.track_count, pluralizeWord(model.size, TRACK_NAME))
 
         Glide.with(itemView.context)
             .load(model.imageUri)
@@ -34,5 +34,9 @@ class PlaylistsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             number % 10 in 2..4 && (number % 100 < 10 || number % 100 >= 20) -> "$number $word${if (word.endsWith('а')) "и" else "а"}"
             else -> "$number $word${if (word.endsWith('а')) "" else "ов"}"
         }
+    }
+
+    companion object {
+        private const val TRACK_NAME = "трек"
     }
 }
