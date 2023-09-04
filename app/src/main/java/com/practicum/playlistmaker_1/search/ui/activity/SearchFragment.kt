@@ -1,7 +1,6 @@
 package com.practicum.playlistmaker_1.search.ui.activity
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,32 +8,34 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.core.widget.doOnTextChanged
+import androidx.navigation.fragment.findNavController
+import com.practicum.playlistmaker_1.R
 import com.practicum.playlistmaker_1.databinding.FragmentSearchBinding
-import com.practicum.playlistmaker_1.player.ui.activity.PlayerActivity
 import com.practicum.playlistmaker_1.search.domain.models.NetworkError
 import com.practicum.playlistmaker_1.search.domain.models.Track
-import com.practicum.playlistmaker_1.common.adapter.TrackAdapter
+import com.practicum.playlistmaker_1.common.adapters.tracks_adapter.TrackAdapter
+import com.practicum.playlistmaker_1.player.ui.activity.PlayerFragment
 import com.practicum.playlistmaker_1.search.ui.models.SearchState
 import com.practicum.playlistmaker_1.search.ui.view_model.SearchViewModel
-import com.practicum.playlistmaker_1.common.util.EXTRA_KEY
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
 
-    private lateinit var searchBinding: FragmentSearchBinding
+    private var _searchBinding: FragmentSearchBinding? = null
+    private val searchBinding get() = _searchBinding!!
     private val viewModel by viewModel<SearchViewModel>()
 
     private var searchInputQuery = ""
 
-    private val trackAdapter = TrackAdapter { showPlayer(it) }
-    private val historyAdapter = TrackAdapter { showPlayer(it) }
+    private val trackAdapter = TrackAdapter { showPlayer(track = it) }
+    private val historyAdapter = TrackAdapter { showPlayer(track = it) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        searchBinding = FragmentSearchBinding.inflate(inflater, container, false)
+        _searchBinding = FragmentSearchBinding.inflate(inflater, container, false)
         return searchBinding.root
     }
 
@@ -94,14 +95,13 @@ class SearchFragment : Fragment() {
         }
     }
 
-
     private fun showPlayer(track: Track) {
         if (viewModel.clickDebounce()) {
             viewModel.addTrackToHistory(track)
-            val intent = Intent(requireContext(), PlayerActivity::class.java).apply {
-                putExtra(EXTRA_KEY, track)
-            }
-            startActivity(intent)
+            findNavController().navigate(
+                R.id.action_searchFragment_to_playerFragment,
+                PlayerFragment.createArgs(track)
+            )
         }
     }
 
@@ -170,5 +170,10 @@ class SearchFragment : Fragment() {
         searchBinding.searchHistoryLayout.visibility = View.GONE
         searchBinding.searchRecycler.visibility = View.GONE
         searchBinding.progressBar.visibility = View.GONE
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _searchBinding = null
     }
 }

@@ -1,13 +1,12 @@
 package com.practicum.playlistmaker_1.media_library.ui.viewmodel
 
-
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.practicum.playlistmaker_1.media_library.domain.api.FavouriteTracksInteractor
 import com.practicum.playlistmaker_1.media_library.ui.models.FavouriteTracksState
-import com.practicum.playlistmaker_1.common.util.CLICK_DEBOUNCE_DELAY_MILLIS
+import com.practicum.playlistmaker_1.search.ui.view_model.SearchViewModel.Companion.CLICK_DEBOUNCE_DELAY_MILLIS
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -16,6 +15,7 @@ class FavouriteTracksViewModel(
 ) : ViewModel() {
 
     private var isClickAllowed = true
+
     private val stateLiveData = MutableLiveData<FavouriteTracksState>()
     fun observeState(): LiveData<FavouriteTracksState> = stateLiveData
 

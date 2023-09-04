@@ -3,7 +3,7 @@ package com.practicum.playlistmaker_1.search.domain.models
 import java.io.Serializable
 
 data class Track(
-    val trackId: Int,
+    val trackId: Long,
     val trackName: String,
     val artistName: String,
     val trackTimeMillis: Long,
@@ -13,17 +13,4 @@ data class Track(
     val primaryGenreName: String,
     val country: String,
     val previewUrl: String?,
-) : Serializable {
-
-    override fun equals(other: Any?): Boolean {
-        return if (other !is Track) {
-            false
-        } else {
-            other.trackId == trackId
-        }
-    }
-
-    override fun hashCode(): Int {
-        return trackId
-    }
-}
+) : Serializable

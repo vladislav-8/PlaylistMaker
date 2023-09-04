@@ -8,7 +8,7 @@ import com.practicum.playlistmaker_1.search.data.network.TracksApi
 import com.practicum.playlistmaker_1.search.data.storage.SearchHistoryStorage
 import com.practicum.playlistmaker_1.search.data.storage.SharedPrefsHistoryStorage
 import com.practicum.playlistmaker_1.search.domain.api.SearchInteractor
-import com.practicum.playlistmaker_1.search.domain.impl.SearchInteractorImpl
+import com.practicum.playlistmaker_1.search.domain.models.impl.SearchInteractorImpl
 import com.practicum.playlistmaker_1.search.ui.view_model.SearchViewModel
 import com.practicum.playlistmaker_1.common.util.BASE_URL
 import org.koin.androidx.viewmodel.dsl.viewModel

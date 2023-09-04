@@ -5,7 +5,7 @@
     tools:context="com.practicum.playlistmaker_1.search.ui.activity.SearchFragment">
 
     <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/settings_toolbar"
+        android:id="@+id/new_playlist_toolbar"
         style="@style/ToolbarColor"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -47,7 +47,7 @@
             android:paddingStart="12dp"
             android:paddingEnd="32dp"
             android:singleLine="true"
-            android:textColor="@color/search_form_text_color"
+            android:textColor="@color/text_color"
             android:textColorHint="@color/search_form_text_hint_color"
             android:textCursorDrawable="@drawable/color_cursor"
             tools:ignore="DuplicateSpeakableTextCheck,TextContrastCheck,VisualLintTextFieldSize" />
