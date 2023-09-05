@@ -5,12 +5,17 @@
     <dimen name="textSize_12">12sp</dimen>
     <dimen name="textSize_14">14sp</dimen>
     <dimen name="textSize_16">16sp</dimen>
+    <dimen name="textSize_18">18sp</dimen>
     <dimen name="textSize_19">19sp</dimen>
     <dimen name="textSize_22">22sp</dimen>
+    <dimen name="textSize_24">24sp</dimen>
     <dimen name="cornerRadius">16dp</dimen>
     <dimen name="marginStart">16dp</dimen>
+    <dimen name="marginStart_4">4dp</dimen>
     <dimen name="marginStart_8">8dp</dimen>
+    <dimen name="marginStart_12">12dp</dimen>
     <dimen name="marginStart2">64dp</dimen>
+    <dimen name="marginStart_16">16dp</dimen>
     <dimen name="margin_horizontal">16dp</dimen>
     <dimen name="margin_horizontal_8">8dp</dimen>
     <dimen name="margin_horizontal_17">17dp</dimen>

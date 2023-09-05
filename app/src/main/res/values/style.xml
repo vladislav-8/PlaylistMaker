@@ -2,9 +2,8 @@
 <resources>
 
     <style name="ToolbarColor">
-        <item name="navigationIconTint">@color/black_button</item>
+        <item name="navigationIconTint">@color/main_black_color</item>
     </style>
-
 
     <style name="background_settings">
         <item name="android:layout_width">match_parent</item>
@@ -50,12 +49,12 @@
         <item name="android:fontFamily">@font/ys_display</item>
         <item name="android:letterSpacing">0</item>
         <item name="android:textAllCaps">false</item>
-        <item name="android:textColor">@color/black_button</item>
+        <item name="android:textColor">@color/main_black_color</item>
         <item name="android:textSize">24sp</item>
         <item name="cornerRadius">16dp</item>
         <item name="iconGravity">textStart</item>
         <item name="iconPadding">8dp</item>
-        <item name="iconTint">@color/black_button</item>
+        <item name="iconTint">@color/main_black_color</item>
     </style>
 
     <style name="textColor">
