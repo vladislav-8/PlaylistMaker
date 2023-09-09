@@ -14,7 +14,7 @@ class PlaylistInteractorImpl(private val playlistRepository: PlaylistRepository)
         playlistRepository.addPlaylist(playlist)
     }
 
-    override suspend fun deletePlaylist(id: Int) {
+    override suspend fun deletePlaylist(id: Long) {
         playlistRepository.deletePlaylist(id)
     }
 
@@ -52,6 +52,4 @@ class PlaylistInteractorImpl(private val playlistRepository: PlaylistRepository)
     override suspend fun deleteTrackFromPlaylist(track: Track, playlist: Playlist): Flow<Boolean> {
         return playlistRepository.deleteTrackFromPlaylist(track, playlist)
     }
-
-
 }

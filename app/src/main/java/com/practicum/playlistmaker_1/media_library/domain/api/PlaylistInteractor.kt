@@ -9,7 +9,7 @@ interface PlaylistInteractor {
 
     suspend fun addPlaylist(playlist: Playlist)
 
-    suspend fun deletePlaylist(id: Int)
+    suspend fun deletePlaylist(id: Long)
 
     suspend fun getPlaylists(): Flow<List<Playlist>>
 

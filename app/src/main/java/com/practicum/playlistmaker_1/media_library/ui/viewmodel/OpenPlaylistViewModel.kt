@@ -81,4 +81,10 @@ class OpenPlaylistViewModel(
     fun shareTracks(tracks: String) {
         sharingInteractor.sharePlaylist(tracks)
     }
+
+    fun deletePlaylist(id: Long) {
+        viewModelScope.launch {
+            playlistInteractor.deletePlaylist(id)
+        }
+    }
 }
