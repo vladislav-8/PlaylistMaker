@@ -2,6 +2,7 @@ package com.practicum.playlistmaker_1.media_library.ui.activity
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
+import android.icu.text.SimpleDateFormat
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -13,12 +14,14 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterInside
 import com.practicum.playlistmaker_1.R
 import com.practicum.playlistmaker_1.common.adapters.tracks_adapter.TrackAdapter
+import com.practicum.playlistmaker_1.common.util.formatAsMinutes
 import com.practicum.playlistmaker_1.databinding.FragmentOpenPlaylistBinding
 import com.practicum.playlistmaker_1.media_library.domain.models.Playlist
 import com.practicum.playlistmaker_1.media_library.ui.viewmodel.OpenPlaylistViewModel
 import com.practicum.playlistmaker_1.player.ui.activity.PlayerFragment
 import com.practicum.playlistmaker_1.search.domain.models.Track
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.Locale
 
 class OpenPlaylistFragment : Fragment() {
 
@@ -65,6 +68,10 @@ class OpenPlaylistFragment : Fragment() {
                 tracksAdapter.tracks.clear()
                 tracksAdapter.tracks.addAll(tracks)
                 tracksAdapter.notifyDataSetChanged()
+                binding.playlistTimeTv.text = resources.getQuantityString(
+                    R.plurals.plural_minutes,
+                    tracks.sumOf { it.trackTimeMillis }.formatAsMinutes().toInt(),
+                    tracks.sumOf { it.trackTimeMillis }.formatAsMinutes())
             }
         }
     }
