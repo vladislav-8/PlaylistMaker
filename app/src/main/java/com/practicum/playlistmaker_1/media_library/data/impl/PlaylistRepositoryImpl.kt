@@ -20,21 +20,21 @@ class   PlaylistRepositoryImpl(
 ) : PlaylistRepository {
 
     override suspend fun addPlaylist(playlist: Playlist) {
-        appDatabase.PlaylistDao()
+        appDatabase.playlistDao()
             .addPlaylist(dbConvertor.mapFromPlaylistToPlaylistEntity(playlist))
     }
 
     override suspend fun deletePlaylist(id: Int) {
-        appDatabase.PlaylistDao().deletePlaylist(id)
+        appDatabase.playlistDao().deletePlaylist(id)
     }
 
     override suspend fun getPlaylists(): Flow<List<Playlist>> = flow {
-        val playlists = appDatabase.PlaylistDao().getPlaylists()
+        val playlists = appDatabase.playlistDao().getPlaylists()
         emit(convertFromPlaylistEntity(playlists))
     }
 
     override suspend fun updatePlaylists(playlist: Playlist) {
-        appDatabase.PlaylistDao()
+        appDatabase.playlistDao()
             .updatePlaylist(dbConvertor.mapFromPlaylistToPlaylistEntity(playlist))
     }
 
@@ -101,14 +101,14 @@ class   PlaylistRepositoryImpl(
     }
 
     override suspend fun getPlaylistById(id: Long): Flow<Playlist> = flow {
-        emit(dbConvertor.mapFromPlaylistEntityToPlaylist(appDatabase.PlaylistDao().getPlaylistById(id)))
+        emit(dbConvertor.mapFromPlaylistEntityToPlaylist(appDatabase.playlistDao().getPlaylistById(id)))
     }
 
     override suspend fun getTracksFromPlaylist(id: Long): Flow<List<Track>> = flow {
         val gson = GsonBuilder().create()
         val listTrackType = object : TypeToken<List<Track>>() {}.type
 
-        val tracksString = appDatabase.PlaylistDao().getTracksFromPlaylist(id)
+        val tracksString = appDatabase.playlistDao().getTracksFromPlaylist(id)
         val tracks = gson.fromJson(tracksString, listTrackType) ?: listOf<Track>()
 
         emit(tracks)

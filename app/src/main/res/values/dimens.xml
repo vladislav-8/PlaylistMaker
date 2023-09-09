@@ -20,6 +20,8 @@
     <dimen name="margin_horizontal_8">8dp</dimen>
     <dimen name="margin_horizontal_17">17dp</dimen>
     <dimen name="margin_horizontal_24">24dp</dimen>
+    <dimen name="margin_vertical_8">8dp</dimen>
+    <dimen name="margin_vertical_16">16dp</dimen>
     <dimen name="marginEnd">16dp</dimen>
     <dimen name="marginBottom">16dp</dimen>
     <dimen name="marginBottom_8">8dp</dimen>

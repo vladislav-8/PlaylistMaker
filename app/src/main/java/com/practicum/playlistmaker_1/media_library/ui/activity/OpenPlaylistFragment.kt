@@ -9,9 +9,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterInside
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.practicum.playlistmaker_1.R
 import com.practicum.playlistmaker_1.common.adapters.tracks_adapter.TrackAdapter
@@ -34,6 +36,10 @@ class OpenPlaylistFragment : Fragment() {
     private val tracksAdapter =
         TrackAdapter({ showPlayer(track = it) }, { showLongClickOnTrack(track = it) })
 
+    private val bottomSheetBehavior get() = BottomSheetBehavior.from(binding.bottomSheetSharing).apply {
+        state = BottomSheetBehavior.STATE_HIDDEN
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -48,6 +54,26 @@ class OpenPlaylistFragment : Fragment() {
         initAdapters()
         initListeners()
         initObservers()
+
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        binding.overlay.isVisible = false
+                        binding.bottomSheetLinear.isVisible = true
+                    }
+
+                    else -> {
+                        binding.overlay.isVisible = true
+                        binding.bottomSheetLinear.isVisible = true
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+        })
     }
 
     private fun initListeners() {
@@ -65,6 +91,9 @@ class OpenPlaylistFragment : Fragment() {
                 val sharePlaylist = viewModel.sharePlaylist(resources)
                 viewModel.shareTracks(sharePlaylist)
             }
+        }
+        binding.playlistMoreMenuIv.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
     }
 

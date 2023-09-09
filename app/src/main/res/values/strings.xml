@@ -56,6 +56,9 @@
     <string name="yes">Да</string>
     <string name="you_do_not_have_any_tracks_in_playlist">В этом плейлисте нет списка треков, которым можно поделиться</string>
     <string name="empty_playlist">[]</string>
+    <string name="sharing">Поделиться</string>
+    <string name="edit_information">Редактировать информацию</string>
+    <string name="delete_playlist">Удалить плейлист</string>
 
     <plurals name="plural_tracks">
         <item quantity="zero">0 треков</item>

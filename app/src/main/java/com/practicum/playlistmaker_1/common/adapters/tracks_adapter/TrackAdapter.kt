@@ -13,8 +13,6 @@ class TrackAdapter(
 ) :
     RecyclerView.Adapter<TrackViewHolder>() {
 
-    var trackOnLongClickListener: ((Track, Int) -> Unit)? = null
-
     var tracks = mutableListOf<Track>()
         set(newTracks) {
             val diffCallback = TracksDiffCallback(field, newTracks)
