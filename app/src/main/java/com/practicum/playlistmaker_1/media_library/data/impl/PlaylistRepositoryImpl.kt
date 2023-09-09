@@ -67,6 +67,35 @@ class   PlaylistRepositoryImpl(
             }
         }
 
+    override suspend fun deleteTrackFromPlaylist(track: Track, playlist: Playlist): Flow<Boolean> = flow {
+        val gson = GsonBuilder().create()
+        val arrayTrackType = object : TypeToken<ArrayList<Track>>() {}.type
+
+        val playlistTracks =
+            gson.fromJson(playlist.trackList, arrayTrackType) ?: arrayListOf<Track>()
+
+        var isInPlaylist = false
+
+        playlistTracks.forEach {
+            if (it.trackId == track.trackId) {
+                isInPlaylist = true
+            }
+        }
+
+        if (isInPlaylist) {
+            playlistTracks.remove(track)
+            playlist.trackList = gson.toJson(playlistTracks)
+
+            playlist.size--
+            updatePlaylists(playlist)
+
+            emit(true)
+        } else {
+            emit(false)
+        }
+    }
+
+
     override suspend fun saveImageToPrivateStorage(uri: Uri) {
         localStorage.saveImageToPrivateStorage(uri)
     }

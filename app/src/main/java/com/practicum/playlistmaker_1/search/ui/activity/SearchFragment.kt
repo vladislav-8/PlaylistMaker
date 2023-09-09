@@ -27,8 +27,8 @@ class SearchFragment : Fragment() {
 
     private var searchInputQuery = ""
 
-    private val trackAdapter = TrackAdapter { showPlayer(track = it) }
-    private val historyAdapter = TrackAdapter { showPlayer(track = it) }
+    private val trackAdapter = TrackAdapter ({ showPlayer(track = it) }, { showLongClickOnTrack(track = it) })
+    private val historyAdapter = TrackAdapter ({ showPlayer(track = it) }, { showLongClickOnTrack(track = it) })
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -175,5 +175,9 @@ class SearchFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _searchBinding = null
+    }
+
+    private fun showLongClickOnTrack(track: Track) {
+        //
     }
 }

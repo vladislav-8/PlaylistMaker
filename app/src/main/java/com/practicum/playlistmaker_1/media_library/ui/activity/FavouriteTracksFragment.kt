@@ -21,9 +21,8 @@ class FavouriteTracksFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel by viewModel<FavouriteTracksViewModel>()
 
-    private val favoritesTracksAdapter = TrackAdapter {
-        showPlayer(track = it)
-    }
+    private val favoritesTracksAdapter =
+        TrackAdapter({ showPlayer(track = it) }, { showLongClickOnTrack(track = it) })
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -74,12 +73,16 @@ class FavouriteTracksFragment : Fragment() {
         viewModel.getFavouriteTracks()
     }
 
-    companion object {
-        fun newInstance() = FavouriteTracksFragment().apply {}
+    private fun showLongClickOnTrack(track: Track) {
+        //
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        fun newInstance() = FavouriteTracksFragment().apply {}
     }
 }

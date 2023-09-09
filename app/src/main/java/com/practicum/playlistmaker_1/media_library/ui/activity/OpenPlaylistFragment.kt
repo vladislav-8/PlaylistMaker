@@ -2,7 +2,6 @@ package com.practicum.playlistmaker_1.media_library.ui.activity
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
-import android.icu.text.SimpleDateFormat
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -12,6 +11,7 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterInside
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.practicum.playlistmaker_1.R
 import com.practicum.playlistmaker_1.common.adapters.tracks_adapter.TrackAdapter
 import com.practicum.playlistmaker_1.common.util.formatAsMinutes
@@ -21,7 +21,7 @@ import com.practicum.playlistmaker_1.media_library.ui.viewmodel.OpenPlaylistView
 import com.practicum.playlistmaker_1.player.ui.activity.PlayerFragment
 import com.practicum.playlistmaker_1.search.domain.models.Track
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.util.Locale
+import kotlin.collections.ArrayList
 
 class OpenPlaylistFragment : Fragment() {
 
@@ -30,7 +30,8 @@ class OpenPlaylistFragment : Fragment() {
     private val viewModel by viewModel<OpenPlaylistViewModel>()
 
     var playlist: Playlist? = null
-    private val tracksAdapter = TrackAdapter { showPlayer(track = it) }
+    private val tracksAdapter =
+        TrackAdapter({ showPlayer(track = it) }, { showLongClickOnTrack(track = it) })
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -63,15 +64,18 @@ class OpenPlaylistFragment : Fragment() {
             showPlaylist(it)
             playlist = it
             Log.d("TAG", "$playlist")
-            viewModel.getTracks(playlist?.id!!)
+            playlist?.id?.let { playlist_id -> viewModel.getTracks(playlist_id) }
             viewModel.tracks.observe(viewLifecycleOwner) { tracks ->
-                tracksAdapter.tracks.clear()
-                tracksAdapter.tracks.addAll(tracks)
-                tracksAdapter.notifyDataSetChanged()
-                binding.playlistTimeTv.text = resources.getQuantityString(
-                    R.plurals.plural_minutes,
-                    tracks.sumOf { it.trackTimeMillis }.formatAsMinutes().toInt(),
-                    tracks.sumOf { it.trackTimeMillis }.formatAsMinutes())
+                if (tracks.isEmpty()) {
+                    tracksAdapter.tracks = arrayListOf()
+                } else {
+                    tracksAdapter.tracks = tracks as ArrayList<Track>
+                    binding.playlistTimeTv.text = resources.getQuantityString(
+                        R.plurals.plural_minutes,
+                        tracksAdapter.tracks.sumOf { it.trackTimeMillis }.formatAsMinutes().toInt(),
+                        tracksAdapter.tracks.sumOf { it.trackTimeMillis }.formatAsMinutes()
+                    )
+                }
             }
         }
     }
@@ -99,6 +103,12 @@ class OpenPlaylistFragment : Fragment() {
                 R.string.playlists,
                 playlist.size
             )
+
+            binding.playlistTimeTv.text = resources.getQuantityString(
+                R.plurals.plural_minutes,
+                tracksAdapter.tracks.sumOf { it.trackTimeMillis }.formatAsMinutes().toInt(),
+                tracksAdapter.tracks.sumOf { it.trackTimeMillis }.formatAsMinutes()
+            )
         }
     }
 
@@ -109,6 +119,11 @@ class OpenPlaylistFragment : Fragment() {
         )
     }
 
+    private fun showLongClickOnTrack(track: Track) {
+        showConfirmDialog(track)
+    }
+
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK) {
@@ -119,6 +134,26 @@ class OpenPlaylistFragment : Fragment() {
                     Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
                 )
             }
+        }
+    }
+
+    private fun showConfirmDialog(track: Track) {
+        context?.let { context ->
+            MaterialAlertDialogBuilder(requireContext())
+                .setMessage(requireContext().getString(R.string.are_you_sure_to_delete_track))
+                .setNegativeButton(R.string.no) { dialog, which -> }
+                .setPositiveButton(R.string.yes) { dialog, which ->
+                    playlist?.let { playlist ->
+                        viewModel.deleteTracks(track, playlist)
+                        val indexToRemove =
+                            tracksAdapter.tracks.indexOfFirst { it.trackId == track.trackId }
+                        if (indexToRemove != -1) {
+                            indexToRemove.let { tracksAdapter.tracks.removeAt(it) }
+                            indexToRemove.let { tracksAdapter.notifyItemRemoved(it) }
+                        }
+                    }
+                    initObservers()
+                }.show()
         }
     }
 

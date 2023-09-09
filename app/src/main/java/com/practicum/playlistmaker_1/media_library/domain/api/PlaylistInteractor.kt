@@ -26,4 +26,6 @@ interface PlaylistInteractor {
     suspend fun saveCurrentPlaylistId(id: Long)
 
     suspend fun getCurrentPlaylistId(): Long
+
+    suspend fun deleteTrackFromPlaylist(track: Track, playlist: Playlist): Flow<Boolean>
 }
