@@ -3,6 +3,7 @@ package com.practicum.playlistmaker_1.media_library.ui.activity
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -24,6 +25,8 @@ class OpenPlaylistFragment : Fragment() {
     private var _binding: FragmentOpenPlaylistBinding? = null
     private val binding get() = _binding!!
     private val viewModel by viewModel<OpenPlaylistViewModel>()
+
+    var playlist: Playlist? = null
     private val tracksAdapter = TrackAdapter { showPlayer(track = it) }
 
     override fun onCreateView(
@@ -55,6 +58,14 @@ class OpenPlaylistFragment : Fragment() {
     private fun initObservers() {
         viewModel.playlist.observe(viewLifecycleOwner) {
             showPlaylist(it)
+            playlist = it
+            Log.d("TAG", "$playlist")
+            viewModel.getTracks(playlist?.id!!)
+            viewModel.tracks.observe(viewLifecycleOwner) { tracks ->
+                tracksAdapter.tracks.clear()
+                tracksAdapter.tracks.addAll(tracks)
+                tracksAdapter.notifyDataSetChanged()
+            }
         }
     }
 

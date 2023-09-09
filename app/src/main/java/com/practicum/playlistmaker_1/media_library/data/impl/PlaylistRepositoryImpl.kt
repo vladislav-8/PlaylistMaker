@@ -82,7 +82,7 @@ class   PlaylistRepositoryImpl(
         val tracksString = appDatabase.PlaylistDao().getTracksFromPlaylist(id)
         val tracks = gson.fromJson(tracksString, listTrackType) ?: listOf<Track>()
 
-        emit(tracks.reversed())
+        emit(tracks)
     }
 
     override suspend fun saveCurrentPlaylistId(id: Long) {
