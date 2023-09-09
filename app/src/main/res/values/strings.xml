@@ -54,6 +54,8 @@
     <string name="are_you_sure_to_delete_track">Хотите удалить трек?</string>
     <string name="no">Нет</string>
     <string name="yes">Да</string>
+    <string name="you_do_not_have_any_tracks_in_playlist">В этом плейлисте нет списка треков, которым можно поделиться</string>
+    <string name="empty_playlist">[]</string>
 
     <plurals name="plural_tracks">
         <item quantity="zero">0 треков</item>

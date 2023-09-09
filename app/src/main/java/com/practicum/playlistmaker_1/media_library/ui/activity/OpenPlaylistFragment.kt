@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterInside
@@ -52,6 +53,18 @@ class OpenPlaylistFragment : Fragment() {
     private fun initListeners() {
         binding.newPlaylistToolbar.setOnClickListener {
             findNavController().popBackStack()
+        }
+        binding.playlistShareIv.setOnClickListener {
+            if (playlist?.trackList.equals(getString(R.string.empty_playlist))) {
+                Toast.makeText(
+                    requireContext(),
+                    R.string.you_do_not_have_any_tracks_in_playlist,
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                val sharePlaylist = viewModel.sharePlaylist(resources)
+                viewModel.shareTracks(sharePlaylist)
+            }
         }
     }
 
@@ -147,7 +160,7 @@ class OpenPlaylistFragment : Fragment() {
                         viewModel.deleteTracks(track, playlist)
                         val indexToRemove =
                             tracksAdapter.tracks.indexOfFirst { it.trackId == track.trackId }
-                        if (indexToRemove != -1) {
+                        if (indexToRemove != DELETE_TRACK_FROM_PLAYLIST) {
                             indexToRemove.let { tracksAdapter.tracks.removeAt(it) }
                             indexToRemove.let { tracksAdapter.notifyItemRemoved(it) }
                         }
@@ -160,5 +173,9 @@ class OpenPlaylistFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        private const val DELETE_TRACK_FROM_PLAYLIST = -1
     }
 }
