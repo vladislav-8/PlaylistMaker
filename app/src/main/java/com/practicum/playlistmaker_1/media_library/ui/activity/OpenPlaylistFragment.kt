@@ -36,9 +36,10 @@ class OpenPlaylistFragment : Fragment() {
     private val tracksAdapter =
         TrackAdapter({ showPlayer(track = it) }, { showLongClickOnTrack(track = it) })
 
-    private val bottomSheetBehavior get() = BottomSheetBehavior.from(binding.bottomSheetSharing).apply {
-        state = BottomSheetBehavior.STATE_HIDDEN
-    }
+    private val bottomSheetBehavior
+        get() = BottomSheetBehavior.from(binding.bottomSheetSharing).apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,7 +55,11 @@ class OpenPlaylistFragment : Fragment() {
         initAdapters()
         initListeners()
         initObservers()
+        initBottomSheet()
 
+    }
+
+    private fun initBottomSheet() {
         bottomSheetBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -81,16 +86,10 @@ class OpenPlaylistFragment : Fragment() {
             findNavController().popBackStack()
         }
         binding.playlistShareIv.setOnClickListener {
-            if (playlist?.trackList.equals(getString(R.string.empty_playlist))) {
-                Toast.makeText(
-                    requireContext(),
-                    R.string.you_do_not_have_any_tracks_in_playlist,
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else {
-                val sharePlaylist = viewModel.sharePlaylist(resources)
-                viewModel.shareTracks(sharePlaylist)
-            }
+            sharingPlaylist()
+        }
+        binding.sharePlaylistTv.setOnClickListener {
+            sharingPlaylist()
         }
         binding.playlistMoreMenuIv.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
@@ -99,6 +98,19 @@ class OpenPlaylistFragment : Fragment() {
 
     private fun initAdapters() {
         binding.playlistTracksRv.adapter = tracksAdapter
+    }
+
+    private fun sharingPlaylist() {
+        if (playlist?.trackList.equals(getString(R.string.empty_playlist))) {
+            Toast.makeText(
+                requireContext(),
+                R.string.you_do_not_have_any_tracks_in_playlist,
+                Toast.LENGTH_SHORT
+            ).show()
+        } else {
+            val sharePlaylist = viewModel.sharePlaylist(resources)
+            viewModel.shareTracks(sharePlaylist)
+        }
     }
 
     private fun initObservers() {
@@ -128,6 +140,7 @@ class OpenPlaylistFragment : Fragment() {
 
             if (playlist.imageUri.toString() != "null") {
                 playlistImage.setImageURI(playlist.imageUri)
+                playlistImageBottomSheet.setImageURI(playlist.imageUri)
             } else {
                 context?.let {
                     Glide
@@ -139,8 +152,16 @@ class OpenPlaylistFragment : Fragment() {
             }
 
             playlistTitle.text = playlist.title
+            playlistTitleBottomSheet.text = playlist.title
+
             playlistDescription.text = playlist.description
+
             playlistSize.text = resources.getQuantityString(
+                R.plurals.plural_tracks,
+                R.string.playlists,
+                playlist.size
+            )
+            playlistSizeBottomSheet.text = resources.getQuantityString(
                 R.plurals.plural_tracks,
                 R.string.playlists,
                 playlist.size

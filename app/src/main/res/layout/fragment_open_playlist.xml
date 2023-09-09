@@ -228,7 +228,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/shareTextView"
+            android:id="@+id/share_playlist_tv"
             style="@style/TextViewStyle_Settings"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_horizontal"
@@ -237,7 +237,7 @@
             android:text="@string/sharing" />
 
         <TextView
-            android:id="@+id/callTextView"
+            android:id="@+id/edit_information_tv"
             style="@style/TextViewStyle_Settings"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_horizontal"
@@ -246,7 +246,7 @@
             android:text="@string/edit_information" />
 
         <TextView
-            android:id="@+id/agreementTextView"
+            android:id="@+id/delete_playlist_tv"
             style="@style/TextViewStyle_Settings"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_horizontal"
