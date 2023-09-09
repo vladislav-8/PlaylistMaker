@@ -1,31 +1,30 @@
 package com.practicum.playlistmaker_1.media_library.ui.activity
 
-import android.net.Uri
+import android.app.Activity.RESULT_OK
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
-import com.practicum.playlistmaker_1.common.adapters.ViewObjects
-import com.practicum.playlistmaker_1.common.adapters.playlist_adapter.PlaylistsAdapter
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterInside
+import com.practicum.playlistmaker_1.R
+import com.practicum.playlistmaker_1.common.adapters.tracks_adapter.TrackAdapter
 import com.practicum.playlistmaker_1.databinding.FragmentOpenPlaylistBinding
+import com.practicum.playlistmaker_1.media_library.domain.models.Playlist
 import com.practicum.playlistmaker_1.media_library.ui.viewmodel.OpenPlaylistViewModel
+import com.practicum.playlistmaker_1.player.ui.activity.PlayerFragment
+import com.practicum.playlistmaker_1.search.domain.models.Track
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class OpenPlaylistFragment : Fragment() {
 
     private var _binding: FragmentOpenPlaylistBinding? = null
     private val binding get() = _binding!!
-
-    private var imageUri: Uri? = null
-
     private val viewModel by viewModel<OpenPlaylistViewModel>()
-
-    private val playlistsAdapter by lazy {
-        PlaylistsAdapter(viewObject = ViewObjects.VerticalTracks)
-    }
-
+    private val tracksAdapter = TrackAdapter { showPlayer(track = it) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,9 +37,9 @@ class OpenPlaylistFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initListeners()
         initAdapters()
-
+        initListeners()
+        initObservers()
     }
 
     private fun initListeners() {
@@ -50,7 +49,59 @@ class OpenPlaylistFragment : Fragment() {
     }
 
     private fun initAdapters() {
-        binding.playlistTracksRv.adapter = playlistsAdapter
+        binding.playlistTracksRv.adapter = tracksAdapter
+    }
+
+    private fun initObservers() {
+        viewModel.playlist.observe(viewLifecycleOwner) {
+            showPlaylist(it)
+        }
+    }
+
+    private fun showPlaylist(playlist: Playlist) {
+
+        with(binding) {
+
+            if (playlist.imageUri.toString() != "null") {
+                playlistImage.setImageURI(playlist.imageUri)
+            } else {
+                context?.let {
+                    Glide
+                        .with(it)
+                        .load(R.drawable.placeholder)
+                        .transform(CenterInside())
+                        .into(playlistImage)
+                }
+            }
+
+            playlistTitle.text = playlist.title
+            playlistDescription.text = playlist.description
+            playlistSize.text = resources.getQuantityString(
+                R.plurals.plural_tracks,
+                R.string.playlists,
+                playlist.size
+            )
+        }
+    }
+
+    private fun showPlayer(track: Track) {
+        findNavController().navigate(
+            R.id.action_openPlaylistFragment_to_playerFragment,
+            PlayerFragment.createArgs(track)
+        )
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK) {
+            val sourceTreeUri = data?.data
+            if (sourceTreeUri != null) {
+                context?.contentResolver?.takePersistableUriPermission(
+                    sourceTreeUri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                )
+            }
+        }
     }
 
     override fun onDestroyView() {

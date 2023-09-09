@@ -13,6 +13,7 @@ import com.practicum.playlistmaker_1.media_library.domain.impl.FavouriteTracksIn
 import com.practicum.playlistmaker_1.media_library.domain.impl.PlaylistInteractorImpl
 import com.practicum.playlistmaker_1.media_library.ui.viewmodel.FavouriteTracksViewModel
 import com.practicum.playlistmaker_1.media_library.ui.viewmodel.NewPlaylistViewModel
+import com.practicum.playlistmaker_1.media_library.ui.viewmodel.OpenPlaylistViewModel
 import com.practicum.playlistmaker_1.media_library.ui.viewmodel.PlaylistViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -29,6 +30,10 @@ val mediaLibraryModule = module {
 
     viewModel {
         PlaylistViewModel(playlistInteractor = get())
+    }
+
+    viewModel {
+        OpenPlaylistViewModel(playlistInteractor = get(), sharingInteractor = get())
     }
 
     factory {
@@ -52,6 +57,6 @@ val mediaLibraryModule = module {
     }
 
     single<LocalStorage> {
-        LocalStorageImpl(context = get())
+        LocalStorageImpl(context = get(), sharedPreferences = get())
     }
 }

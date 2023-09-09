@@ -51,5 +51,9 @@
         android:id="@+id/openPlaylistFragment"
         android:name="com.practicum.playlistmaker_1.media_library.ui.activity.OpenPlaylistFragment"
         android:label="fragment_open_playlist"
-        tools:layout="@layout/fragment_open_playlist" />
+        tools:layout="@layout/fragment_open_playlist" >
+        <action
+            android:id="@+id/action_openPlaylistFragment_to_playerFragment"
+            app:destination="@id/playerFragment" />
+    </fragment>
 </navigation>

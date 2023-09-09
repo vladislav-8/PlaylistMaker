@@ -32,4 +32,20 @@ class PlaylistInteractorImpl(private val playlistRepository: PlaylistRepository)
     override suspend fun saveImageToPrivateStorage(uri: Uri) {
         playlistRepository.saveImageToPrivateStorage(uri)
     }
+
+    override suspend fun getPlaylistById(id: Long): Flow<Playlist> {
+        return playlistRepository.getPlaylistById(id)
+    }
+
+    override suspend fun getTracksFromPlaylist(id: Long): Flow<List<Track>> {
+        return playlistRepository.getTracksFromPlaylist(id)
+    }
+
+    override suspend fun saveCurrentPlaylistId(id: Long) {
+        playlistRepository.saveCurrentPlaylistId(id)
+    }
+
+    override suspend fun getCurrentPlaylistId(): Long {
+        return playlistRepository.getCurrentPlaylistId()
+    }
 }

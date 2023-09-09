@@ -13,7 +13,6 @@
     <string name="media_text" translatable="false">это Активити для Медиатеки, скоро тут что-то будет !</string>
     <string name="search_text" translatable="false">Это Активити для Поиска, скоро тут что-то будет !</string>
     <string name="back" translatable="false">Назад</string>
-
     <string name="subject">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
     <string name="message">Спасибо разработчикам и разработчицам за крутое приложение!</string>
     <string name="support_mail">tchervladislav@yandex.ru</string>
@@ -50,7 +49,22 @@
     <string name="added_to_playlist">Добавлено в плейлист «%s»</string>
     <string name="track_already_added_to_playlist">Трек уже добавлен в плейлист «%s»</string>
     <string name="track_count">%s</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="choose_app_for_sharing">Выберите приложение для отправки</string>
+
+    <plurals name="plural_tracks">
+        <item quantity="zero">%d треков</item>
+        <item quantity="one">%d трек</item>
+        <item quantity="two">%d трека</item>
+        <item quantity="few">%d трека</item>
+        <item quantity="many">%d треков</item>
+        <item quantity="other">%d треков</item>
+    </plurals>
+
+    <plurals name="plural_minutes">
+        <item quantity="one">%1$d минута</item>
+        <item quantity="few">%1$d минуты</item>
+        <item quantity="many">%1$d минут</item>
+    </plurals>
+
 
 </resources>

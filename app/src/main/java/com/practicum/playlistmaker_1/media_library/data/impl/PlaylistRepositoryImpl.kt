@@ -41,13 +41,21 @@ class   PlaylistRepositoryImpl(
     override suspend fun addTrackToPlayList(track: Track, playlist: Playlist): Flow<Boolean>  =
         flow {
             val gson = GsonBuilder().create()
-            val arrayTrackType = object : TypeToken<ArrayList<Long>>() {}.type
+            val arrayTrackType = object : TypeToken<ArrayList<Track>>() {}.type
 
             val playlistTracks =
-                gson.fromJson(playlist.trackList, arrayTrackType) ?: arrayListOf<Long>()
+                gson.fromJson(playlist.trackList, arrayTrackType) ?: arrayListOf<Track>()
 
-            if (!playlistTracks.contains(track.trackId)) {
-                playlistTracks.add(track.trackId)
+            var isInPlaylist = false
+
+            playlistTracks.forEach {
+                if (it.trackId == track.trackId) {
+                    isInPlaylist = true
+                }
+            }
+
+            if (!isInPlaylist) {
+                playlistTracks.add(track)
                 playlist.trackList = gson.toJson(playlistTracks)
 
                 playlist.size++
@@ -63,6 +71,27 @@ class   PlaylistRepositoryImpl(
         localStorage.saveImageToPrivateStorage(uri)
     }
 
+    override suspend fun getPlaylistById(id: Long): Flow<Playlist> = flow {
+        emit(dbConvertor.mapFromPlaylistEntityToPlaylist(appDatabase.PlaylistDao().getPlaylistById(id)))
+    }
+
+    override suspend fun getTracksFromPlaylist(id: Long): Flow<List<Track>> = flow {
+        val gson = GsonBuilder().create()
+        val listTrackType = object : TypeToken<List<Track>>() {}.type
+
+        val tracksString = appDatabase.PlaylistDao().getTracksFromPlaylist(id)
+        val tracks = gson.fromJson(tracksString, listTrackType) ?: listOf<Track>()
+
+        emit(tracks.reversed())
+    }
+
+    override suspend fun saveCurrentPlaylistId(id: Long) {
+        localStorage.saveCurrentPlaylistId(id)
+    }
+
+    override suspend fun getCurrentPlaylistId(): Long {
+        return localStorage.getCurrentPlaylistId()
+    }
 
     private fun convertFromPlaylistEntity(playlists: List<PlaylistEntity>): List<Playlist> {
         return playlists.map { playlists ->

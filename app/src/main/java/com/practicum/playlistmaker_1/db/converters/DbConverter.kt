@@ -8,7 +8,6 @@ import com.practicum.playlistmaker_1.search.domain.models.Track
 import java.util.Calendar
 
 class DbConverter {
-
     fun mapFromTrackEntityToTrack(from: TrackEntity): Track {
         return Track(
             trackId = from.trackId,

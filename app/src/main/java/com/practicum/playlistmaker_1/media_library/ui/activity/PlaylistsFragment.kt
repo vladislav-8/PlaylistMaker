@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.practicum.playlistmaker_1.R
@@ -16,8 +15,6 @@ import com.practicum.playlistmaker_1.media_library.domain.models.Playlist
 import com.practicum.playlistmaker_1.media_library.ui.ItemDecorator
 import com.practicum.playlistmaker_1.media_library.ui.models.PlaylistsScreenState
 import com.practicum.playlistmaker_1.media_library.ui.viewmodel.PlaylistViewModel
-import com.practicum.playlistmaker_1.player.ui.activity.PlayerFragment
-import com.practicum.playlistmaker_1.search.domain.models.Track
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistsFragment : Fragment() {
@@ -36,7 +33,6 @@ class PlaylistsFragment : Fragment() {
     ): View {
         _binding = FragmentPlaylistsBinding.inflate(inflater, container, false)
         return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -58,7 +54,8 @@ class PlaylistsFragment : Fragment() {
     }
 
     private fun initListeners() {
-        playlistsAdapter.onPlayListClicked = {
+        playlistsAdapter.onPlayListClicked = { playlist ->
+            viewModel.saveCurrentPlaylistId(playlist.id)
             findNavController().navigate(R.id.action_mediaLibraryFragment_to_openPlaylistFragment)
         }
         binding.newPlaylist.setOnClickListener {

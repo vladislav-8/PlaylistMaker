@@ -2,6 +2,7 @@ package com.practicum.playlistmaker_1.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.practicum.playlistmaker_1.db.dao.PlaylistDao
 import com.practicum.playlistmaker_1.db.dao.TrackDao
 import com.practicum.playlistmaker_1.db.entity.PlaylistEntity
