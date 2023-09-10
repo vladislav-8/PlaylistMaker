@@ -32,6 +32,7 @@ class OpenPlaylistFragment : Fragment() {
     private val viewModel by viewModel<OpenPlaylistViewModel>()
 
     var playlist: Playlist? = null
+
     private val tracksAdapter =
         TrackAdapter({ showPlayer(track = it) }, { showLongClickOnTrack(track = it) })
 
@@ -55,7 +56,6 @@ class OpenPlaylistFragment : Fragment() {
         initListeners()
         initObservers()
         initBottomSheet()
-
     }
 
     private fun initBottomSheet() {
@@ -114,7 +114,7 @@ class OpenPlaylistFragment : Fragment() {
     }
 
     private fun sharingPlaylist() {
-        if (playlist?.trackList.equals(getString(R.string.empty_playlist))) {
+        if (viewModel.isEmptyTracks()) {
             Toast.makeText(
                 requireContext(),
                 R.string.you_do_not_have_any_tracks_in_playlist,
@@ -197,20 +197,6 @@ class OpenPlaylistFragment : Fragment() {
 
     private fun showLongClickOnTrack(track: Track) {
         showConfirmDialog(track)
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK) {
-            val sourceTreeUri = data?.data
-            if (sourceTreeUri != null) {
-                context?.contentResolver?.takePersistableUriPermission(
-                    sourceTreeUri,
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-                )
-            }
-        }
     }
 
     private fun showConfirmDialog(track: Track) {
