@@ -10,14 +10,14 @@
         android:label="fragment_media_library"
         tools:layout="@layout/fragment_media_library">
         <action
-            android:id="@+id/action_mediaLibraryFragment_to_newPlaylistFragment"
-            app:destination="@id/newPlaylistFragment" />
-        <action
             android:id="@+id/action_mediaLibraryFragment_to_playerFragment"
             app:destination="@id/playerFragment" />
         <action
             android:id="@+id/action_mediaLibraryFragment_to_openPlaylistFragment"
             app:destination="@id/openPlaylistFragment" />
+        <action
+            android:id="@+id/action_mediaLibraryFragment_to_newPlaylistFragment"
+            app:destination="@id/newPlaylistFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -33,11 +33,6 @@
         android:name="com.practicum.playlistmaker_1.settings.ui.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />
-    <fragment
-        android:id="@+id/newPlaylistFragment"
-        android:name="com.practicum.playlistmaker_1.media_library.ui.activity.NewPlaylistFragment"
-        android:label="fragment_new_playlist"
-        tools:layout="@layout/fragment_new_playlist" />
     <fragment
         android:id="@+id/playerFragment"
         android:name="com.practicum.playlistmaker_1.player.ui.activity.PlayerFragment"
@@ -55,5 +50,18 @@
         <action
             android:id="@+id/action_openPlaylistFragment_to_playerFragment"
             app:destination="@id/playerFragment" />
+        <action
+            android:id="@+id/action_openPlaylistFragment_to_editPlaylistFragment"
+            app:destination="@id/editPlaylistFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/newPlaylistFragment"
+        android:name="com.practicum.playlistmaker_1.media_library.ui.activity.NewPlaylistFragment"
+        android:label="new_playlist_fragment"
+        tools:layout="@layout/fragment_base_playlist"/>
+    <fragment
+        android:id="@+id/editPlaylistFragment"
+        android:name="com.practicum.playlistmaker_1.media_library.ui.activity.EditPlaylistFragment"
+        android:label="EditPlaylistFragment"
+        tools:layout="@layout/fragment_base_playlist"/>
 </navigation>

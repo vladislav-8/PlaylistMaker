@@ -28,7 +28,8 @@ class MainActivity : AppCompatActivity() {
             when (destination.id) {
                 R.id.playerFragment,
                 R.id.newPlaylistFragment,
-                R.id.openPlaylistFragment -> {
+                R.id.openPlaylistFragment,
+                R.id.editPlaylistFragment-> {
                     mainBinding.bottomNavigationView.isVisible = false
                 }
 

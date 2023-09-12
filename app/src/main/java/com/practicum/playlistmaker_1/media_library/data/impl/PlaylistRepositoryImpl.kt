@@ -1,6 +1,7 @@
 package com.practicum.playlistmaker_1.media_library.data.impl
 
 import android.net.Uri
+import android.util.Log
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import com.practicum.playlistmaker_1.db.AppDatabase
@@ -58,7 +59,7 @@ class   PlaylistRepositoryImpl(
                 playlistTracks.add(track)
                 playlist.trackList = gson.toJson(playlistTracks)
 
-                playlist.size++
+                playlist.size = playlist.size!! + 1
                 updatePlaylists(playlist)
 
                 emit(true)
@@ -86,7 +87,7 @@ class   PlaylistRepositoryImpl(
             playlistTracks.remove(track)
             playlist.trackList = gson.toJson(playlistTracks)
 
-            playlist.size--
+            playlist.size = playlist.size - 1
             updatePlaylists(playlist)
 
             emit(true)
@@ -94,7 +95,6 @@ class   PlaylistRepositoryImpl(
             emit(false)
         }
     }
-
 
     override suspend fun saveImageToPrivateStorage(uri: Uri) {
         localStorage.saveImageToPrivateStorage(uri)

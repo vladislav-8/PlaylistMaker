@@ -1,9 +1,6 @@
 package com.practicum.playlistmaker_1.media_library.ui.activity
 
-import android.app.Activity.RESULT_OK
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -94,6 +91,7 @@ class OpenPlaylistFragment : Fragment() {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
         binding.deletePlaylistTv.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             context?.let { context ->
                 MaterialAlertDialogBuilder(requireContext())
                     .setMessage(requireContext().getString(R.string.do_you_want_to_delete_playlist))
@@ -106,8 +104,11 @@ class OpenPlaylistFragment : Fragment() {
                     }.show()
             }
         }
+        binding.editInformationTv.setOnClickListener {
+            findNavController().navigate(R.id.action_openPlaylistFragment_to_editPlaylistFragment,
+                EditPlaylistFragment.createArgs(playlist!!))
+        }
     }
-
 
     private fun initAdapters() {
         binding.playlistTracksRv.adapter = tracksAdapter
@@ -130,7 +131,6 @@ class OpenPlaylistFragment : Fragment() {
         viewModel.playlist.observe(viewLifecycleOwner) {
             showPlaylist(it)
             playlist = it
-            Log.d("TAG", "$playlist")
             playlist?.id?.let { playlist_id -> viewModel.getTracks(playlist_id) }
             viewModel.tracks.observe(viewLifecycleOwner) { tracks ->
                 if (tracks.isEmpty()) {
@@ -145,6 +145,7 @@ class OpenPlaylistFragment : Fragment() {
                 }
             }
         }
+        playlist?.let { showPlaylist(it) }
     }
 
     private fun showPlaylist(playlist: Playlist) {

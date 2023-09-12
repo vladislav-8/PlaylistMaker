@@ -5,8 +5,7 @@ import android.net.Uri
 interface LocalStorage {
     suspend fun saveImageToPrivateStorage(uri: Uri)
 
-    suspend fun saveCurrentPlaylistId(id: Long)
+    fun saveCurrentPlaylistId(id: Long)
 
-    suspend fun getCurrentPlaylistId(): Long
-
+    fun getCurrentPlaylistId(): Long
 }

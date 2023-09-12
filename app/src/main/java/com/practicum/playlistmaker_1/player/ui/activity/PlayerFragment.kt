@@ -141,7 +141,7 @@ class PlayerFragment : Fragment() {
         playerBinding.apply {
             Glide
                 .with(mediaTrackImage)
-                .load(track.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
+                .load(track.artworkUrl60.replaceAfterLast('/', "512x512bb.jpg"))
                 .placeholder(R.drawable.placeholder)
                 .centerCrop()
                 .transform(RoundedCorners(resources.getDimensionPixelSize(R.dimen.corner_radius_8)))

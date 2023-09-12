@@ -12,7 +12,7 @@ import com.practicum.playlistmaker_1.media_library.domain.api.PlaylistRepository
 import com.practicum.playlistmaker_1.media_library.domain.impl.FavouriteTracksInteractorImpl
 import com.practicum.playlistmaker_1.media_library.domain.impl.PlaylistInteractorImpl
 import com.practicum.playlistmaker_1.media_library.ui.viewmodel.FavouriteTracksViewModel
-import com.practicum.playlistmaker_1.media_library.ui.viewmodel.NewPlaylistViewModel
+import com.practicum.playlistmaker_1.media_library.ui.viewmodel.BasePlaylistViewModel
 import com.practicum.playlistmaker_1.media_library.ui.viewmodel.OpenPlaylistViewModel
 import com.practicum.playlistmaker_1.media_library.ui.viewmodel.PlaylistViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -25,7 +25,7 @@ val mediaLibraryModule = module {
     }
 
     viewModel {
-        NewPlaylistViewModel(playlistInteractor = get())
+        BasePlaylistViewModel(playlistInteractor = get())
     }
 
     viewModel {

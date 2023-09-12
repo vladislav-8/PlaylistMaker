@@ -34,12 +34,12 @@ class LocalStorageImpl
             .compress(Bitmap.CompressFormat.JPEG, QUALITY_IMAGE, outputStream)
     }
 
-    override suspend fun saveCurrentPlaylistId(id: Long) {
+    override fun saveCurrentPlaylistId(id: Long) {
         sharedPreferences.edit().remove(LAST_PLAYLIST_KEY).apply()
         sharedPreferences.edit().putLong(LAST_PLAYLIST_KEY, id).apply()
     }
 
-    override suspend fun getCurrentPlaylistId(): Long {
+    override fun getCurrentPlaylistId(): Long {
         return sharedPreferences.getLong(LAST_PLAYLIST_KEY, 0)
     }
 
