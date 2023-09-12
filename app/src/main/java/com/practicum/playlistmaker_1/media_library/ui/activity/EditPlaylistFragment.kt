@@ -1,9 +1,7 @@
 package com.practicum.playlistmaker_1.media_library.ui.activity
 
-import android.content.Context
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,14 +11,12 @@ import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import androidx.core.widget.doOnTextChanged
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterInside
 import com.practicum.playlistmaker_1.R
 import com.practicum.playlistmaker_1.databinding.FragmentBasePlaylistBinding
 import com.practicum.playlistmaker_1.media_library.domain.models.Playlist
-import kotlinx.coroutines.launch
 import java.io.Serializable
 
 class EditPlaylistFragment : BasePlaylistFragment() {
@@ -43,12 +39,6 @@ class EditPlaylistFragment : BasePlaylistFragment() {
         playlist = requireArguments().getSerializableExtra(EDIT_PLAYLIST, Playlist::class.java)
 
         showPlaylist(playlist!!)
-
-        viewModel.playlist.observe(viewLifecycleOwner) {
-            playlist = it
-            viewModel.getCurrentPlaylistById(it.id)
-            Log.d("TAG", "4to to ttyttt")
-        }
 
     }
 

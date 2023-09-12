@@ -1,6 +1,5 @@
 package com.practicum.playlistmaker_1.media_library.ui.viewmodel
 
-import android.os.Build
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,7 +8,6 @@ import com.practicum.playlistmaker_1.media_library.domain.api.PlaylistInteractor
 import com.practicum.playlistmaker_1.media_library.domain.models.Playlist
 import com.practicum.playlistmaker_1.media_library.ui.models.PlaylistsScreenState
 import kotlinx.coroutines.launch
-
 
 class PlaylistViewModel(private val playlistInteractor: PlaylistInteractor): ViewModel() {
 

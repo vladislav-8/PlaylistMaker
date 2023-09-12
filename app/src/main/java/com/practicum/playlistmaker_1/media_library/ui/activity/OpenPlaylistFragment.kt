@@ -1,6 +1,7 @@
 package com.practicum.playlistmaker_1.media_library.ui.activity
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,8 +32,9 @@ class OpenPlaylistFragment : Fragment() {
 
     var playlist: Playlist? = null
 
-    private val tracksAdapter =
+    private val tracksAdapter by lazy {
         TrackAdapter({ showPlayer(track = it) }, { showLongClickOnTrack(track = it) })
+    }
 
     private val bottomSheetBehavior
         get() = BottomSheetBehavior.from(binding.bottomSheetSharing).apply {
@@ -147,7 +149,8 @@ class OpenPlaylistFragment : Fragment() {
                         Toast.LENGTH_SHORT
                     ).show()
                 } else {
-                    tracksAdapter.tracks = tracks as ArrayList<Track>
+                    tracksAdapter.tracks = tracks as MutableList<Track>
+                    tracks.reverse()
                     binding.playlistTimeTv.text = resources.getQuantityString(
                         R.plurals.plural_minutes,
                         tracksAdapter.tracks.sumOf { it.trackTimeMillis }.formatAsMinutes().toInt(),
@@ -181,16 +184,9 @@ class OpenPlaylistFragment : Fragment() {
 
             playlistDescription.text = playlist.description
 
-            playlistSize.text = resources.getQuantityString(
-                R.plurals.plural_tracks,
-                R.string.playlists,
-                playlist.size
-            )
-            playlistSizeBottomSheet.text = resources.getQuantityString(
-                R.plurals.plural_tracks,
-                R.string.playlists,
-                playlist.size
-            )
+            playlistSize.text = pluralizeWord(playlist.size, TRACK_NAME)
+
+            playlistSizeBottomSheet.text = pluralizeWord(playlist.size, TRACK_NAME)
 
             binding.playlistTimeTv.text = resources.getQuantityString(
                 R.plurals.plural_minutes,
@@ -231,6 +227,17 @@ class OpenPlaylistFragment : Fragment() {
         }
     }
 
+    // по какой-то причине у меня не захотело работать через плюрал,
+    // гугл говорит, что зависит от локальных настроек языка, победить я не смог, поэтому оставил так
+
+    private fun pluralizeWord(number: Int, word: String): String {
+        return when {
+            number % 10 == 1 && number % 100 != 11 -> "$number $word"
+            number % 10 in 2..4 && (number % 100 < 10 || number % 100 >= 20) -> "$number $word${if (word.endsWith('а')) "и" else "а"}"
+            else -> "$number $word${if (word.endsWith('а')) "" else "ов"}"
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -238,5 +245,6 @@ class OpenPlaylistFragment : Fragment() {
 
     companion object {
         private const val DELETE_TRACK_FROM_PLAYLIST = -1
+        private const val TRACK_NAME = "трек"
     }
 }

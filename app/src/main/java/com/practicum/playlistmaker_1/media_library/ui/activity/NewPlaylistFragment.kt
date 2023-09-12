@@ -1,8 +1,6 @@
 package com.practicum.playlistmaker_1.media_library.ui.activity
 
-
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

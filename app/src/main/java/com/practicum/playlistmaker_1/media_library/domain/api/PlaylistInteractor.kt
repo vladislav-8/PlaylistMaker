@@ -1,6 +1,5 @@
 package com.practicum.playlistmaker_1.media_library.domain.api
 
-import android.net.Uri
 import com.practicum.playlistmaker_1.media_library.domain.models.Playlist
 import com.practicum.playlistmaker_1.search.domain.models.Track
 import kotlinx.coroutines.flow.Flow

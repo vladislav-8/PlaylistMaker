@@ -104,10 +104,10 @@ class   PlaylistRepositoryImpl(
 
     override suspend fun getTracksFromPlaylist(id: Long): Flow<List<Track>> = flow {
         val gson = GsonBuilder().create()
-        val listTrackType = object : TypeToken<List<Track>>() {}.type
+        val listTrackType = object : TypeToken<MutableList<Track>>() {}.type
 
         val tracksString = appDatabase.playlistDao().getTracksFromPlaylist(id)
-        val tracks = gson.fromJson(tracksString, listTrackType) ?: listOf<Track>()
+        val tracks = gson.fromJson(tracksString, listTrackType) ?: mutableListOf<Track>()
 
         emit(tracks)
     }
