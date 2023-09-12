@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -128,6 +129,7 @@ class OpenPlaylistFragment : Fragment() {
     }
 
     private fun initObservers() {
+
         viewModel.playlist.observe(viewLifecycleOwner) {
             showPlaylist(it)
             playlist = it
@@ -135,6 +137,7 @@ class OpenPlaylistFragment : Fragment() {
             viewModel.tracks.observe(viewLifecycleOwner) { tracks ->
                 if (tracks.isEmpty()) {
                     tracksAdapter.tracks = arrayListOf()
+                    Toast.makeText(requireContext(), getString(R.string.empty_playlist), Toast.LENGTH_SHORT).show()
                 } else {
                     tracksAdapter.tracks = tracks as ArrayList<Track>
                     binding.playlistTimeTv.text = resources.getQuantityString(
@@ -152,9 +155,10 @@ class OpenPlaylistFragment : Fragment() {
 
         with(binding) {
 
+
             if (playlist.imageUri.toString() != "null") {
-                playlistImage.setImageURI(playlist.imageUri)
-                playlistImageBottomSheet.setImageURI(playlist.imageUri)
+                playlistImage.setImageURI(playlist.imageUri?.toUri())
+                playlistImageBottomSheet.setImageURI(playlist.imageUri?.toUri())
             } else {
                 context?.let {
                     Glide

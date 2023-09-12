@@ -1,6 +1,8 @@
 package com.practicum.playlistmaker_1.media_library.ui.activity
 
 
+import android.app.Activity.RESULT_OK
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
@@ -24,23 +26,17 @@ abstract class BasePlaylistFragment : Fragment() {
 
     var _binding: FragmentBasePlaylistBinding? = null
     val binding get() = _binding!!
-    var imageUri: Uri? = null
+
 
     val viewModel by viewModel<BasePlaylistViewModel>()
 
-    val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-        if (uri != null) {
-            binding.pickImage.setImageURI(uri)
-            imageUri = uri
-        } else {
-            Log.d("PhotoPicker", "No media selected")
-        }
-    }
+
 
     val textWatcher = object : TextWatcher {
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             //
         }
+
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             if (p0 != null) {
                 if (p0.isNotEmpty()) {
@@ -70,8 +66,33 @@ abstract class BasePlaylistFragment : Fragment() {
                 }
             }
         }
+
         override fun afterTextChanged(p0: Editable?) {
-            //
+            if (p0?.isNotEmpty()!!) {
+                binding.buttonCreatePlaylist.isEnabled = true
+                context?.let {
+                    ContextCompat.getColor(
+                        it,
+                        R.color.switcher
+                    )
+                }?.let {
+                    binding.buttonCreatePlaylist.setBackgroundColor(
+                        it
+                    )
+                }
+            } else {
+                binding.buttonCreatePlaylist.isEnabled = false
+                context?.let {
+                    ContextCompat.getColor(
+                        it,
+                        R.color.main_grey_color
+                    )
+                }?.let {
+                    binding.buttonCreatePlaylist.setBackgroundColor(
+                        it
+                    )
+                }
+            }
         }
     }
 
@@ -80,6 +101,20 @@ abstract class BasePlaylistFragment : Fragment() {
     ): View {
         _binding = FragmentBasePlaylistBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        //if ok user selected a file
+        if (resultCode == RESULT_OK) {
+            val sourceTreeUri = data?.data
+            if (sourceTreeUri != null) {
+                getContext()?.getContentResolver()?.takePersistableUriPermission(
+                    sourceTreeUri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                )
+            }
+        }
     }
 
     fun showConfirmDialog() {

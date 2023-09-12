@@ -8,8 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
+import androidx.core.net.toUri
 import androidx.core.os.bundleOf
+import androidx.core.widget.doAfterTextChanged
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterInside
@@ -21,6 +22,7 @@ import java.io.Serializable
 class EditPlaylistFragment : BasePlaylistFragment() {
 
     var playlist: Playlist? = null
+    var imageUri: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -37,13 +39,15 @@ class EditPlaylistFragment : BasePlaylistFragment() {
         Log.d("TAG", "$playlist")
 
 
+
         with(binding) {
             editTextPlaylistTitle.setText(playlist?.title)
             editTextPlaylistDescription.setText(playlist?.description)
-            imageUri = playlist?.imageUri
+
+            imageUri = playlist!!.imageUri.toString()
 
             if (playlist?.imageUri.toString() != "null") {
-                binding.pickImage.setImageURI(playlist?.imageUri)
+                binding.pickImage.setImageURI(playlist?.imageUri?.toUri())
             } else {
                 context?.let {
                     Glide
@@ -69,20 +73,28 @@ class EditPlaylistFragment : BasePlaylistFragment() {
                     size = playlist?.size!!
                 )
                 viewModel.updatePlaylist(updatedPlaylist)
-                imageUri?.let { viewModel.saveToLocalStorage(uri = it) }
             }
 
             findNavController().navigateUp()
         }
 
-        binding.editTextPlaylistTitle.addTextChangedListener(textWatcher)
-
         binding.newPlaylistToolbar.setOnClickListener {
             findNavController().popBackStack()
+        }
+
+        val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            if (uri != null) {
+                binding.pickImage.setImageURI(uri)
+                imageUri = uri.toString()
+            } else {
+                Log.d("PhotoPicker", "No media selected")
+            }
         }
         binding.pickImage.setOnClickListener {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
+
+        binding.editTextPlaylistTitle.addTextChangedListener(textWatcher)
     }
 
     override fun onDestroyView() {
