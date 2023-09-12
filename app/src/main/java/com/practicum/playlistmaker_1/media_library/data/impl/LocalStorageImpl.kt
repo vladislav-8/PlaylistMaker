@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Environment
+import androidx.core.net.toUri
 import com.practicum.playlistmaker_1.media_library.data.local_storage.LocalStorage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -16,7 +17,7 @@ class LocalStorageImpl
     (private val context: Context,
      private val sharedPreferences: SharedPreferences) : LocalStorage {
 
-    override suspend fun saveImageToPrivateStorage(uri: Uri) {
+    override suspend fun saveImageToPrivateStorage(uri: String) {
 
         val filePath = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), DIRECTORY)
 
@@ -24,7 +25,7 @@ class LocalStorageImpl
             filePath.mkdirs()
         }
         val file = File(filePath, IMAGE_NAME)
-        val inputStream = context.contentResolver.openInputStream(uri)
+        val inputStream = context.contentResolver.openInputStream(uri.toUri())
         val outputStream = withContext(Dispatchers.IO) {
             FileOutputStream(file)
         }

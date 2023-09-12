@@ -54,6 +54,8 @@ class OpenPlaylistFragment : Fragment() {
         initListeners()
         initObservers()
         initBottomSheet()
+
+        viewModel.getPlaylist()
     }
 
     private fun initBottomSheet() {
@@ -106,8 +108,10 @@ class OpenPlaylistFragment : Fragment() {
             }
         }
         binding.editInformationTv.setOnClickListener {
-            findNavController().navigate(R.id.action_openPlaylistFragment_to_editPlaylistFragment,
-                EditPlaylistFragment.createArgs(playlist!!))
+            findNavController().navigate(
+                R.id.action_openPlaylistFragment_to_editPlaylistFragment,
+                EditPlaylistFragment.createArgs(playlist!!)
+            )
         }
     }
 
@@ -137,7 +141,11 @@ class OpenPlaylistFragment : Fragment() {
             viewModel.tracks.observe(viewLifecycleOwner) { tracks ->
                 if (tracks.isEmpty()) {
                     tracksAdapter.tracks = arrayListOf()
-                    Toast.makeText(requireContext(), getString(R.string.empty_playlist), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.empty_playlist),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 } else {
                     tracksAdapter.tracks = tracks as ArrayList<Track>
                     binding.playlistTimeTv.text = resources.getQuantityString(
@@ -154,7 +162,6 @@ class OpenPlaylistFragment : Fragment() {
     private fun showPlaylist(playlist: Playlist) {
 
         with(binding) {
-
 
             if (playlist.imageUri.toString() != "null") {
                 playlistImage.setImageURI(playlist.imageUri?.toUri())

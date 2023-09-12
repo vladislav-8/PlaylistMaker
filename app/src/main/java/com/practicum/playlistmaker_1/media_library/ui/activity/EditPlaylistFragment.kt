@@ -1,5 +1,6 @@
 package com.practicum.playlistmaker_1.media_library.ui.activity
 
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -8,21 +9,23 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
-import androidx.core.widget.doAfterTextChanged
+import androidx.core.widget.doOnTextChanged
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterInside
 import com.practicum.playlistmaker_1.R
 import com.practicum.playlistmaker_1.databinding.FragmentBasePlaylistBinding
 import com.practicum.playlistmaker_1.media_library.domain.models.Playlist
+import kotlinx.coroutines.launch
 import java.io.Serializable
 
 class EditPlaylistFragment : BasePlaylistFragment() {
 
     var playlist: Playlist? = null
-    var imageUri: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -34,20 +37,30 @@ class EditPlaylistFragment : BasePlaylistFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        buttonEnable()
+        initListeners()
 
         playlist = requireArguments().getSerializableExtra(EDIT_PLAYLIST, Playlist::class.java)
-        Log.d("TAG", "$playlist")
 
+        showPlaylist(playlist!!)
 
+        viewModel.playlist.observe(viewLifecycleOwner) {
+            playlist = it
+            viewModel.getCurrentPlaylistById(it.id)
+            Log.d("TAG", "4to to ttyttt")
+        }
 
+    }
+
+    private fun showPlaylist(playlist: Playlist) {
         with(binding) {
-            editTextPlaylistTitle.setText(playlist?.title)
-            editTextPlaylistDescription.setText(playlist?.description)
+            editTextPlaylistTitle.setText(playlist.title)
+            editTextPlaylistDescription.setText(playlist.description)
 
-            imageUri = playlist!!.imageUri.toString()
+            imageUri = playlist.imageUri.toString()
 
-            if (playlist?.imageUri.toString() != "null") {
-                binding.pickImage.setImageURI(playlist?.imageUri?.toUri())
+            if (playlist.imageUri.toString() != "null") {
+                binding.pickImage.setImageURI(playlist.imageUri?.toUri())
             } else {
                 context?.let {
                     Glide
@@ -61,7 +74,15 @@ class EditPlaylistFragment : BasePlaylistFragment() {
 
         binding.buttonCreatePlaylist.text = getString(R.string.save)
         binding.newPlaylistToolbar.title = getString(R.string.editing)
+    }
 
+    private fun initListeners() {
+        binding.pickImage.setOnClickListener {
+            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        }
+        binding.newPlaylistToolbar.setOnClickListener {
+            findNavController().popBackStack()
+        }
         binding.buttonCreatePlaylist.setOnClickListener {
             if (playlist != null) {
                 val updatedPlaylist = Playlist(
@@ -74,27 +95,38 @@ class EditPlaylistFragment : BasePlaylistFragment() {
                 )
                 viewModel.updatePlaylist(updatedPlaylist)
             }
-
-            findNavController().navigateUp()
-        }
-
-        binding.newPlaylistToolbar.setOnClickListener {
             findNavController().popBackStack()
         }
+    }
 
-        val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-            if (uri != null) {
-                binding.pickImage.setImageURI(uri)
-                imageUri = uri.toString()
+    private fun buttonEnable() {
+        binding.editTextPlaylistTitle.doOnTextChanged { text, start, before, count ->
+            if (text.isNullOrEmpty()) {
+                binding.buttonCreatePlaylist.isEnabled = false
+                context?.let {
+                    ContextCompat.getColor(
+                        it,
+                        R.color.main_grey_color
+                    )
+                }?.let {
+                    binding.buttonCreatePlaylist.setBackgroundColor(
+                        it
+                    )
+                }
             } else {
-                Log.d("PhotoPicker", "No media selected")
+                binding.buttonCreatePlaylist.isEnabled = true
+                context?.let {
+                    ContextCompat.getColor(
+                        it,
+                        R.color.switcher
+                    )
+                }?.let {
+                    binding.buttonCreatePlaylist.setBackgroundColor(
+                        it
+                    )
+                }
             }
         }
-        binding.pickImage.setOnClickListener {
-            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-        }
-
-        binding.editTextPlaylistTitle.addTextChangedListener(textWatcher)
     }
 
     override fun onDestroyView() {

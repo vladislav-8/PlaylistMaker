@@ -2,7 +2,6 @@ package com.practicum.playlistmaker_1.media_library.ui.viewmodel
 
 import android.content.res.Resources
 import android.icu.text.SimpleDateFormat
-import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,7 +11,6 @@ import com.practicum.playlistmaker_1.media_library.domain.api.PlaylistInteractor
 import com.practicum.playlistmaker_1.media_library.domain.models.Playlist
 import com.practicum.playlistmaker_1.search.domain.models.Track
 import com.practicum.playlistmaker_1.sharing.SharingInteractor
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -30,7 +28,7 @@ class OpenPlaylistViewModel(
     private val _isAlreadyInPlaylist = MutableLiveData<Pair<String, Boolean>>()
     val isAlreadyInPlaylist: LiveData<Pair<String, Boolean>> = _isAlreadyInPlaylist
 
-    init {
+    fun getPlaylist() {
         viewModelScope.launch {
             getCurrentPlaylistById(playlistInteractor.getCurrentPlaylistId())
         }

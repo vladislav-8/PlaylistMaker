@@ -17,8 +17,6 @@ import com.practicum.playlistmaker_1.media_library.domain.models.Playlist
 
 class NewPlaylistFragment : BasePlaylistFragment() {
 
-    var imageUri: String? = null
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -34,15 +32,6 @@ class NewPlaylistFragment : BasePlaylistFragment() {
 
     private fun initListeners() {
 
-        val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-            if (uri != null) {
-                binding.pickImage.setImageURI(uri)
-                imageUri = uri.toString()
-            } else {
-                Log.d("PhotoPicker", "No media selected")
-            }
-        }
-
         binding.pickImage.setOnClickListener {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
@@ -57,6 +46,7 @@ class NewPlaylistFragment : BasePlaylistFragment() {
             )
 
             viewModel.savePlaylist(playlist)
+            imageUri?.let { viewModel.saveToLocalStorage(uri = it) }
 
             Toast.makeText(
                 requireContext(),

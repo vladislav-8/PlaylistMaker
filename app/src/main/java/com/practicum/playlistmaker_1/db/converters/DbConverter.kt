@@ -1,6 +1,5 @@
 package com.practicum.playlistmaker_1.db.converters
 
-import androidx.core.net.toUri
 import com.practicum.playlistmaker_1.db.entity.PlaylistEntity
 import com.practicum.playlistmaker_1.db.entity.TrackEntity
 import com.practicum.playlistmaker_1.media_library.domain.models.Playlist

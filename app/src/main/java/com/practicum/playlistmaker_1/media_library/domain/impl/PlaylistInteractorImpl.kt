@@ -29,7 +29,7 @@ class PlaylistInteractorImpl(private val playlistRepository: PlaylistRepository)
     override suspend fun addTrackToPlayList(track: Track, playlist: Playlist): Flow<Boolean> =
         playlistRepository.addTrackToPlayList(track, playlist)
 
-    override suspend fun saveImageToPrivateStorage(uri: Uri) {
+    override suspend fun saveImageToPrivateStorage(uri: String) {
         playlistRepository.saveImageToPrivateStorage(uri)
     }
 

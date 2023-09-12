@@ -1,9 +1,7 @@
 package com.practicum.playlistmaker_1.media_library.ui.activity
 
-
 import android.app.Activity.RESULT_OK
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -12,7 +10,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
@@ -27,10 +24,17 @@ abstract class BasePlaylistFragment : Fragment() {
     var _binding: FragmentBasePlaylistBinding? = null
     val binding get() = _binding!!
 
-
+    var imageUri: String? = null
     val viewModel by viewModel<BasePlaylistViewModel>()
 
-
+    val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        if (uri != null) {
+            binding.pickImage.setImageURI(uri)
+            imageUri = uri.toString()
+        } else {
+            Log.d("PhotoPicker", "No media selected")
+        }
+    }
 
     val textWatcher = object : TextWatcher {
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -68,31 +72,7 @@ abstract class BasePlaylistFragment : Fragment() {
         }
 
         override fun afterTextChanged(p0: Editable?) {
-            if (p0?.isNotEmpty()!!) {
-                binding.buttonCreatePlaylist.isEnabled = true
-                context?.let {
-                    ContextCompat.getColor(
-                        it,
-                        R.color.switcher
-                    )
-                }?.let {
-                    binding.buttonCreatePlaylist.setBackgroundColor(
-                        it
-                    )
-                }
-            } else {
-                binding.buttonCreatePlaylist.isEnabled = false
-                context?.let {
-                    ContextCompat.getColor(
-                        it,
-                        R.color.main_grey_color
-                    )
-                }?.let {
-                    binding.buttonCreatePlaylist.setBackgroundColor(
-                        it
-                    )
-                }
-            }
+            //
         }
     }
 
@@ -103,6 +83,7 @@ abstract class BasePlaylistFragment : Fragment() {
         return binding.root
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         //if ok user selected a file
