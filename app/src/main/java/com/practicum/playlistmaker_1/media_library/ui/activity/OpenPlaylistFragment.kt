@@ -122,6 +122,7 @@ class OpenPlaylistFragment : Fragment() {
     }
 
     private fun sharingPlaylist() {
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         if (viewModel.isEmptyTracks()) {
             Toast.makeText(
                 requireContext(),
