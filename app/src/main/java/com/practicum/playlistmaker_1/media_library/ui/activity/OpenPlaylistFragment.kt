@@ -259,11 +259,6 @@ class OpenPlaylistFragment : Fragment() {
         _binding = null
     }
 
-    override fun onResume() {
-        super.onResume()
-        tracksAdapter.tracks.reverse()
-    }
-
     companion object {
         private const val DELETE_TRACK_FROM_PLAYLIST = -1
         private const val TRACK_NAME = "трек"
