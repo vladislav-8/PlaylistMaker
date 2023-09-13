@@ -163,6 +163,7 @@ class OpenPlaylistFragment : Fragment() {
                 }
             }
         }
+        viewModel.getPlaylist()
         playlist?.let { showPlaylist(it) }
     }
 
