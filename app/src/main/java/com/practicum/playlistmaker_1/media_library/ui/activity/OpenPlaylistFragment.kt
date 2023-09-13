@@ -139,6 +139,9 @@ class OpenPlaylistFragment : Fragment() {
         viewModel.playlist.observe(viewLifecycleOwner) {
             showPlaylist(it)
             playlist = it
+            if (playlist?.description == "") {
+                binding.playlistDescription.isVisible = false
+            }
             playlist?.id?.let { playlist_id -> viewModel.getTracks(playlist_id) }
             viewModel.tracks.observe(viewLifecycleOwner) { tracks ->
                 if (tracks.isEmpty()) {
@@ -188,6 +191,7 @@ class OpenPlaylistFragment : Fragment() {
             } else {
                 playlistDescription.isVisible = false
             }
+
 
             playlistSize.text = pluralizeWord(playlist.size, TRACK_NAME)
 
@@ -239,6 +243,7 @@ class OpenPlaylistFragment : Fragment() {
         return when {
             number % 10 == 1 && number % 100 != 11 -> "$number $word"
             number % 10 in 2..4 && (number % 100 < 10 || number % 100 >= 20) -> "$number $word${if (word.endsWith('а')) "и" else "а"}"
+
             else -> "$number $word${if (word.endsWith('а')) "" else "ов"}"
         }
     }

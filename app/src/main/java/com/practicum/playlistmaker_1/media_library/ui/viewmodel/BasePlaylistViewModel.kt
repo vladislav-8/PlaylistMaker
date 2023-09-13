@@ -34,12 +34,4 @@ class BasePlaylistViewModel(
             playlistInteractor.updatePlaylists(playlist)
         }
     }
-
-    fun getCurrentPlaylistById(id: Long) {
-        viewModelScope.launch {
-            playlistInteractor.getPlaylistById(id).collect {
-                _playlist.postValue(it)
-            }
-        }
-    }
 }
