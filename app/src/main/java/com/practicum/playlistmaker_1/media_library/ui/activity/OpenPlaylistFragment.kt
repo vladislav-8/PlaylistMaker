@@ -154,7 +154,6 @@ class OpenPlaylistFragment : Fragment() {
                     ).show()
                 } else {
                     tracksAdapter.tracks = tracks as MutableList<Track>
-                    tracks.reverse()
                     binding.playlistTimeTv.text = resources.getQuantityString(
                         R.plurals.plural_minutes,
                         tracksAdapter.tracks.sumOf { it.trackTimeMillis }.formatAsMinutes().toInt(),
@@ -257,6 +256,10 @@ class OpenPlaylistFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onResume() {
+        super.onResume()
     }
 
     companion object {
