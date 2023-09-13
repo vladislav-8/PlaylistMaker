@@ -182,7 +182,13 @@ class OpenPlaylistFragment : Fragment() {
             playlistTitle.text = playlist.title
             playlistTitleBottomSheet.text = playlist.title
 
-            playlistDescription.text = playlist.description
+            if (playlistDescription.text.isNullOrEmpty()) {
+                playlistDescription.text = playlist.description
+                playlistDescription.isVisible = true
+            } else {
+                playlistDescription.isVisible = false
+            }
+
 
             playlistSize.text = pluralizeWord(playlist.size, TRACK_NAME)
 
@@ -233,7 +239,13 @@ class OpenPlaylistFragment : Fragment() {
     private fun pluralizeWord(number: Int, word: String): String {
         return when {
             number % 10 == 1 && number % 100 != 11 -> "$number $word"
-            number % 10 in 2..4 && (number % 100 < 10 || number % 100 >= 20) -> "$number $word${if (word.endsWith('а')) "и" else "а"}"
+            number % 10 in 2..4 && (number % 100 < 10 || number % 100 >= 20) -> "$number $word${
+                if (word.endsWith(
+                        'а'
+                    )
+                ) "и" else "а"
+            }"
+
             else -> "$number $word${if (word.endsWith('а')) "" else "ов"}"
         }
     }
