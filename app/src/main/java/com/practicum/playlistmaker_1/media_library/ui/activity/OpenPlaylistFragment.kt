@@ -98,7 +98,7 @@ class OpenPlaylistFragment : Fragment() {
         binding.deletePlaylistTv.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             context?.let { context ->
-                MaterialAlertDialogBuilder(requireContext())
+                MaterialAlertDialogBuilder(requireContext(), R.style.MyDialogTheme)
                     .setMessage(requireContext().getString(R.string.do_you_want_to_delete_playlist))
                     .setNegativeButton(R.string.no) { dialog, which -> }
                     .setPositiveButton(R.string.yes) { dialog, which ->
@@ -218,7 +218,7 @@ class OpenPlaylistFragment : Fragment() {
 
     private fun showConfirmDialog(track: Track) {
         context?.let { context ->
-            MaterialAlertDialogBuilder(requireContext())
+            MaterialAlertDialogBuilder(requireContext(),  R.style.MyDialogTheme)
                 .setMessage(requireContext().getString(R.string.are_you_sure_to_delete_track))
                 .setNegativeButton(R.string.no) { dialog, which -> }
                 .setPositiveButton(R.string.yes) { dialog, which ->

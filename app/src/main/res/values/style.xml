@@ -29,6 +29,27 @@
         <item name="titleTextAppearance">@style/toolbarText</item>
     </style>
 
+    <style name="MyDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">@color/white</item>
+        <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
+        <!-- Style for negative button -->
+        <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
+    </style>
+
+    <style name="PositiveButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <!-- text color for the button -->
+        <item name="android:textColor">@color/switcher</item>
+        <!-- Background tint for the button -->
+        <item name="android:backgroundTint">@color/white</item>
+    </style>
+
+    <style name="NegativeButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <!-- text color for the button -->
+        <item name="android:textColor">@color/switcher</item>
+        <!-- Background tint for the button -->
+        <item name="android:backgroundTint">@color/white</item>
+    </style>
+
     <style name="TextViewStyle_Settings">
         <item name="android:layout_width">match_parent</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
@@ -197,7 +218,7 @@
         <item name="android:textSize">@dimen/textSize_14</item>
     </style>
 
-    <style name="NavigationViewStyle" >
+    <style name="NavigationViewStyle">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@color/white</item>
