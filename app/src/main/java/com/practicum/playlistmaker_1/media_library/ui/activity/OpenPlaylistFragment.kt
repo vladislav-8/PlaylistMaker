@@ -194,7 +194,6 @@ class OpenPlaylistFragment : Fragment() {
                 playlistDescription.isVisible = false
             }
 
-
             playlistSize.text = pluralizeWord(playlist.size, TRACK_NAME)
 
             playlistSizeBottomSheet.text = pluralizeWord(playlist.size, TRACK_NAME)
@@ -258,6 +257,11 @@ class OpenPlaylistFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        tracksAdapter.tracks.reverse()
     }
 
     companion object {
