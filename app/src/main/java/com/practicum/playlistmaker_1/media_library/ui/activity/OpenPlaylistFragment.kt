@@ -146,6 +146,7 @@ class OpenPlaylistFragment : Fragment() {
             viewModel.tracks.observe(viewLifecycleOwner) { tracks ->
                 if (tracks.isEmpty()) {
                     tracksAdapter.tracks = arrayListOf()
+                    binding.textNotFound.isVisible = true
                     Toast.makeText(
                         requireContext(),
                         getString(R.string.empty_playlist),
@@ -242,7 +243,12 @@ class OpenPlaylistFragment : Fragment() {
     private fun pluralizeWord(number: Int, word: String): String {
         return when {
             number % 10 == 1 && number % 100 != 11 -> "$number $word"
-            number % 10 in 2..4 && (number % 100 < 10 || number % 100 >= 20) -> "$number $word${if (word.endsWith('а')) "и" else "а"}"
+            number % 10 in 2..4 && (number % 100 < 10 || number % 100 >= 20) -> "$number $word${
+                if (word.endsWith(
+                        'а'
+                    )
+                ) "и" else "а"
+            }"
 
             else -> "$number $word${if (word.endsWith('а')) "" else "ов"}"
         }
