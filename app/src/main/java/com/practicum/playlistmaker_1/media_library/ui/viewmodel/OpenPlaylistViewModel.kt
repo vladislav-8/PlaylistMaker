@@ -55,6 +55,9 @@ class OpenPlaylistViewModel(
             playlistInteractor.deleteTrackFromPlaylist(track, playlist).collect {
                 _isAlreadyInPlaylist.postValue(Pair(playlist.title, it))
             }
+            viewModelScope.launch {
+                getCurrentPlaylistById(playlistInteractor.getCurrentPlaylistId())
+            }
         }
     }
 

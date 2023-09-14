@@ -148,13 +148,8 @@ class OpenPlaylistFragment : Fragment() {
                 if (tracks.isEmpty()) {
                     tracksAdapter.tracks = arrayListOf()
                     binding.textNotFound.isVisible = true
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.empty_playlist),
-                        Toast.LENGTH_SHORT
-                    ).show()
                 } else {
-                    tracksAdapter.tracks = tracks as MutableList<Track>
+                    tracksAdapter.tracks = tracks as ArrayList<Track>
                     binding.playlistTimeTv.text = resources.getQuantityString(
                         R.plurals.plural_minutes,
                         tracksAdapter.tracks.sumOf { it.trackTimeMillis }.formatAsMinutes().toInt(),
@@ -232,7 +227,6 @@ class OpenPlaylistFragment : Fragment() {
                             indexToRemove.let { tracksAdapter.notifyItemRemoved(it) }
                         }
                     }
-                    initObservers()
                 }.show()
         }
     }
@@ -244,12 +238,7 @@ class OpenPlaylistFragment : Fragment() {
         return when {
             number % 10 == 1 && number % 100 != 11 -> "$number $word"
             number % 10 in 2..4 && (number % 100 < 10 || number % 100 >= 20) -> "$number $word${
-                if (word.endsWith(
-                        'а'
-                    )
-                ) "и" else "а"
-            }"
-
+                if (word.endsWith('а')) "и" else "а"}"
             else -> "$number $word${if (word.endsWith('а')) "" else "ов"}"
         }
     }
@@ -257,10 +246,6 @@ class OpenPlaylistFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    override fun onResume() {
-        super.onResume()
     }
 
     companion object {
