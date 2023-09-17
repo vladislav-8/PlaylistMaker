@@ -14,6 +14,6 @@ import com.practicum.playlistmaker_1.db.entity.TrackEntity
     ]
 )
 abstract class AppDatabase: RoomDatabase() {
-    abstract fun TrackDao(): TrackDao
-    abstract fun PlaylistDao(): PlaylistDao
+    abstract fun trackDao(): TrackDao
+    abstract fun playlistDao(): PlaylistDao
 }

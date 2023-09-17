@@ -12,6 +12,7 @@ class ExternalNavigatorImpl (private val context: Context) : ExternalNavigator {
 
     private val emailSubject = context.getString(R.string.subject)
     private val emailText = context.getString(R.string.message)
+    private val chooseApp = context.getString(R.string.choose_app_for_sharing)
 
     override fun shareLink(shareAppLink: String) {
         val intent = Intent(Intent.ACTION_SEND).apply {
@@ -39,5 +40,16 @@ class ExternalNavigatorImpl (private val context: Context) : ExternalNavigator {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
         startActivity(context, intent, null)
+    }
+
+    override fun sharePlaylist(playlist: String) {
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, playlist)
+            type = "text/plain"
+        }
+
+        val shareIntent = Intent.createChooser(sendIntent, chooseApp)
+        context.startActivity(shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
     }
 }

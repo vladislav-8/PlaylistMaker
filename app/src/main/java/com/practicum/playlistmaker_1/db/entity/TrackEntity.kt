@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.practicum.playlistmaker_1.db.entity.TrackEntity.Companion.TABLE_NAME
 
+
 @Entity(tableName = TABLE_NAME)
 data class TrackEntity(
     @PrimaryKey
@@ -11,7 +12,7 @@ data class TrackEntity(
     val trackName: String,
     val artistName: String,
     val trackTimeMillis: Long,
-    val artworkUrl100: String,
+    val artworkUrl60: String,
     val collectionName: String,
     val releaseDate: String?,
     val primaryGenreName: String,

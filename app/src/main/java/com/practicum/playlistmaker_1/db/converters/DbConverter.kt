@@ -1,6 +1,5 @@
 package com.practicum.playlistmaker_1.db.converters
 
-import androidx.core.net.toUri
 import com.practicum.playlistmaker_1.db.entity.PlaylistEntity
 import com.practicum.playlistmaker_1.db.entity.TrackEntity
 import com.practicum.playlistmaker_1.media_library.domain.models.Playlist
@@ -8,14 +7,13 @@ import com.practicum.playlistmaker_1.search.domain.models.Track
 import java.util.Calendar
 
 class DbConverter {
-
     fun mapFromTrackEntityToTrack(from: TrackEntity): Track {
         return Track(
             trackId = from.trackId,
             trackName = from.trackName,
             artistName = from.artistName,
             trackTimeMillis = from.trackTimeMillis,
-            artworkUrl100 = from.artworkUrl100,
+            artworkUrl60 = from.artworkUrl60,
             collectionName = from.collectionName,
             releaseDate = from.releaseDate,
             primaryGenreName = from.primaryGenreName,
@@ -30,7 +28,7 @@ class DbConverter {
             trackName = from.trackName,
             artistName = from.artistName,
             trackTimeMillis = from.trackTimeMillis,
-            artworkUrl100 = from.artworkUrl100,
+            artworkUrl60 = from.artworkUrl60,
             collectionName = from.collectionName,
             releaseDate = from.releaseDate,
             primaryGenreName = from.primaryGenreName,
@@ -45,7 +43,7 @@ class DbConverter {
             id = from.id,
             title = from.title,
             description = from.description,
-            imageUri = from.imageUri.toUri(),
+            imageUri = from.imageUri,
             trackList = from.trackList,
             size = from.size
         )

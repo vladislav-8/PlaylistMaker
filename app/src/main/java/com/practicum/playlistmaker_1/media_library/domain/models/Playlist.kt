@@ -1,12 +1,12 @@
 package com.practicum.playlistmaker_1.media_library.domain.models
 
-import android.net.Uri
+import java.io.Serializable
 
 data class Playlist(
-    val id: Long = 0,
-    val title: String,
+    var id: Long = 0,
+    var title: String,
     val description: String,
-    val imageUri: Uri? = null,
+    val imageUri: String? = null,
     var trackList: String,
     var size: Int,
-)
+): Serializable

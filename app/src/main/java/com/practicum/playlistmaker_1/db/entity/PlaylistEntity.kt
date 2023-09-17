@@ -14,7 +14,6 @@ data class PlaylistEntity(
     val trackList: String,
     val size: Int
 ) {
-
     companion object {
         const val TABLE_NAME = "playlist_table"
     }
